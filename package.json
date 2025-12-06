@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "pm2 deploy ecosystem.config.js production update"
   },
   "dependencies": {
     "next": "16.0.7",

@@ -5,9 +5,6 @@ import { useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 
 const CleaningThankYou: React.FC = () => {
-  const searchParams = useSearchParams()
-  const adsCode = searchParams.get('ecaiad')
-
   return (
     <>
       <Head>
@@ -32,7 +29,7 @@ const CleaningThankYou: React.FC = () => {
                 />
               </svg>
             </div>
-            <h1 className='text-2xl font-bold text-gray-800 mb-2'>
+            <h1 className='text-xl font-bold text-gray-800 mb-2'>
               ご予約ありがとうございます
             </h1>
             <p className='text-gray-600'>

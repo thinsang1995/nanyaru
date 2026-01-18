@@ -9,6 +9,7 @@ type RegisterFieldKeys =
   | 'cleanNumOfAirCon'
   | 'cleanNumOfAirConOut'
   | 'cleanOtherRequest'
+  | 'cleanImages'
   | 'cleanOtherMenu'
   | 'dayOne'
   | 'startTimeOne'
@@ -33,11 +34,15 @@ export const usingItems = [
 export const airConItems = [
   { label: '0台', value: '0台' },
   { label: '1台', value: '1台' },
+  { label: '2台', value: '2台' },
+  { label: '3台', value: '3台' },
 ]
 
 export const airConOutItems = [
   { label: '0台', value: '0台' },
   { label: '1台', value: '1台' },
+  { label: '2台', value: '2台' },
+  { label: '3台', value: '3台' },
 ]
 
 export const otherMenuItems = [
@@ -85,7 +90,7 @@ export const chidrenEducateItems = [
 
 type IFieldValue = {
   items: { label: string; value: string }[]
-  type: 'radio' | 'select' | 'input' | 'multiselect' | 'date' | 'textarea'
+  type: 'radio' | 'select' | 'input' | 'multiselect' | 'date' | 'textarea' | 'image'
   inputType?: 'text' | 'tel'
   question: string[]
   suffix?: string[]
@@ -215,10 +220,16 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     placeholder: '例：CS-X401D2',
     rules: {},
   },
+  cleanImages: {
+    items: [],
+    type: 'image',
+    question: ['清掃箇所の写真があればアップロードしてください。（複数画像可能）'],
+    rules: {},
+  },
   cleanOtherMenu: {
     items: otherMenuItems,
     type: 'multiselect',
-    question: ['【水回りメニュー】※オプションのみのご注文は出来ません。'],
+    question: ['【水回りメニュー】※オプションのみのご注文は出来ません。（複数選択可能）'],
     rules: {
       required: {
         value: true,

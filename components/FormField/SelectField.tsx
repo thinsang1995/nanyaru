@@ -35,10 +35,11 @@ const ControlledSelectField: React.FC<IControlledSelectFieldProps> = ({
           <select
             onChange={onChange}
             id={name}
-            className='block w-full p-2.5 mt-2 
+            className='block w-full p-3 
             text-gray-900 text-sm bg-gray-50 
-            border border-gray-300 rounded-lg 
-            focus:ring-blue-500 focus:border-blue-500'
+            border border-gray-200 rounded-lg 
+            focus:ring-2 focus:ring-green-400 focus:border-green-400
+            transition-all duration-200 hover:bg-white cursor-pointer'
             {...fieldRest}
           >
             {items.map((i) => (

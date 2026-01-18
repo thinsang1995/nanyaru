@@ -36,11 +36,42 @@ const MultiSelectField: React.FC<IControlledSelectFieldProps> = ({
             id={name}
             options={items}
             onChange={onChange}
-            placeholder='曜日を選択してください。'
+            placeholder='選択してください'
             value={value}
             isMulti
             isSearchable={false}
-            className='mt-3 [&>div]:p-1 [&>div]:border-gray-300 [&>div]:rounded-lg'
+            className='[&>div]:p-1 [&>div]:border-gray-200 [&>div]:rounded-lg [&>div]:bg-gray-50 [&>div:hover]:bg-white [&>div]:transition-all'
+            styles={{
+              control: (base) => ({
+                ...base,
+                borderColor: '#e5e7eb',
+                boxShadow: 'none',
+                '&:hover': {
+                  borderColor: '#4ade80',
+                },
+                '&:focus-within': {
+                  borderColor: '#4ade80',
+                  boxShadow: '0 0 0 2px rgba(74, 222, 128, 0.2)',
+                },
+              }),
+              multiValue: (base) => ({
+                ...base,
+                backgroundColor: '#dcfce7',
+                borderRadius: '6px',
+              }),
+              multiValueLabel: (base) => ({
+                ...base,
+                color: '#166534',
+              }),
+              multiValueRemove: (base) => ({
+                ...base,
+                color: '#166534',
+                '&:hover': {
+                  backgroundColor: '#bbf7d0',
+                  color: '#14532d',
+                },
+              }),
+            }}
             {...fieldRest}
           />
           {orderLength > 0 && <OrderField orderNumber={orderNumber} orderLength={orderLength} />}

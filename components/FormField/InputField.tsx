@@ -29,9 +29,9 @@ const InputField: React.FC<IInputFieldProps> = ({
 }) => {
   const { control } = useFormContext()
   const baseClassName =
-    'block w-full p-2.5 mt-2 text-black text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+    'block w-full p-3 text-black text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-200 bg-gray-50 hover:bg-white'
   const largeClassName =
-    'block w-full p-3 mt-2 text-black text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+    'block w-full p-4 text-black text-lg border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-200 bg-gray-50 hover:bg-white'
 
   return (
     <Controller

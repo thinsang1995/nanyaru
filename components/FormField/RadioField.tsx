@@ -27,18 +27,29 @@ const RadioField: React.FC<IRadioFieldProps> = ({
   orderNumber,
   orderLength,
   isDriver,
-  gridCol=1,
+  gridCol,
 }) => {
   const { control } = useFormContext()
 
   const firstClassName =
-    'inline-flex justify-center items-center p-3 w-full bg-white rounded-lg border border-gray-200 text-gray-500 cursor-pointer'
+    'inline-flex justify-center items-center p-3 w-full bg-gray-50 rounded-lg border-2 border-gray-200 text-gray-600 cursor-pointer transition-all duration-200'
   const basicClassName =
-    'peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100'
+    'peer-checked:border-green-400 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 hover:border-gray-300'
   const driverClassName =
-    'peer-checked:bg-[#fce50e] peer-checked:text-black hover:text-black hover:bg-[#fce50e]'
+    'peer-checked:bg-green-400 peer-checked:border-green-400 peer-checked:text-white hover:bg-green-50 hover:border-green-300'
   const flexColClassName = `flex ${flexCol ? 'flex-col' : 'flex-row'}`
-  const gridColClassName = `grid grid-cols-${gridCol}`
+  
+  // Get specific grid class based on gridCol value
+  const getGridClassName = () => {
+    if (!gridCol) return ''
+    switch (gridCol) {
+      case 1: return 'grid grid-cols-1'
+      case 2: return 'grid grid-cols-2'
+      case 3: return 'grid grid-cols-3'
+      case 4: return 'grid grid-cols-4'
+      default: return 'grid grid-cols-3'
+    }
+  }
 
   return (
     <Controller
@@ -48,7 +59,7 @@ const RadioField: React.FC<IRadioFieldProps> = ({
       render={({ field: { onChange, ...fieldRest }, formState, fieldState }) => {
         return (
           <div className='w-full flex flex-col'>
-            <ul className={`${gridCol ? gridColClassName : flexColClassName} gap-2 w-full mt-2`}>
+            <ul className={`${gridCol ? getGridClassName() : flexColClassName} gap-2 w-full mt-2`}>
               {items.map(({ label, value }) => (
                 <li key={value} className='w-full'>
                   <input

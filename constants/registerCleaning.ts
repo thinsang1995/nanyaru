@@ -213,7 +213,7 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     placeholder: '例：CS-X401D2',
     rules: {},
   },
-    cleanAirConNumber: {
+  cleanAirConNumber: {
     items: [],
     type: 'image',
     question: ['エアコンの型番の記載ある箇所の画像があればアップロードしてください。'],
@@ -295,13 +295,10 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     question: [''],
     rules: {},
   },
-
   cleanBike: {
     items: bikeItems,
     type: 'radio',
-    question: [
-      '当日は三輪バイクでお伺いさせていただきます。敷地内に駐輪スペースはございますか?',
-    ],
+    question: ['当日は三輪バイクでお伺いさせていただきます。敷地内に駐輪スペースはございますか?'],
     rules: {
       required: {
         value: true,

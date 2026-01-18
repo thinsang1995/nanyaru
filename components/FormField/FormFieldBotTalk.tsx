@@ -42,9 +42,7 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({
           </div>
         </div>
       )}
-      <div className='mt-3'>
-        {children}
-      </div>
+      <div className='mt-3'>{children}</div>
     </div>
   )
 }

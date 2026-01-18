@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
 import Image from 'next/image'
 import FloatingCTA from '@/components/FloatingCTA'
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
+  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz' // Add your LINE URL here
 
   return (
     <>

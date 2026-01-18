@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, Suspense } from 'react'
 import dayjs from 'dayjs'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import isEmpty from 'lodash/isEmpty'
 import { Oaza } from 'jp-zipcode-lookup'
-import fieldMap, { RegisterFieldKeys, experienceItems } from '../../../constants/registerCleaning'
+import fieldMap, { RegisterFieldKeys, RegisterFields, usingItems } from '../../../constants/registerCleaning'
 import axiosInstance, { handleAPIErrors } from '../../../utils/axiosInstance'
 import transformResponse from '../../../utils/transformResponse'
 import FormField from '../../../components/FormField/FormField'
@@ -15,18 +15,33 @@ import FormFieldInputButton from '../../../components/FormField/FormFieldInputBu
 import InputField from '../../../components/FormField/InputField'
 import RadioField from '../../../components/FormField/RadioField'
 import SelectField from '../../../components/FormField/SelectField'
+import MultiSelectField from '../../../components/FormField/MultiSelectField'
+import DateField from '../../../components/FormField/DateField'
+import TextareaField from '../../../components/FormField/TextareaField'
 import OrderField from '../../../components/FormField/OrderField'
 
-export type DrFormInputs = {
-  drName: string | string[]
-  drAge: string
-  drPhoneNumber: string | string[]
-  drPostCode: string
-  drExperience: string
-  drAddress?: string
-  drDay: string
-  drStartTime: string
-  drEndTime: string
+export type CleaningFormInputs = {
+  cleanName: string
+  cleanFurigana: string
+  cleanPhoneNumber: string
+  cleanPostCode: string
+  cleanExperience: string
+  cleanNumOfAirCon: string
+  cleanNumOfAirConOut: string
+  cleanOtherRequest: string
+  cleanOtherMenu: string
+  dayOne: string
+  startTimeOne: string
+  endTimeOne: string
+  dayTwo: string
+  startTimeTwo: string
+  endTimeTwo: string
+  dayThree: string
+  startTimeThree: string
+  endTimeThree: string
+  cleanAddress: string
+  cleanBike: string
+  cleanOtherWarning: string
   adsCode?: string
   registerTime?: string
   registerDate?: string
@@ -60,26 +75,55 @@ function lookupAddress(postCode: string): Address | null {
 }
 
 const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoScroll = true }) => {
-  const methods = useForm<DrFormInputs>({
+  const methods = useForm<CleaningFormInputs>({
     mode: 'onChange',
     defaultValues: {
-      drName: '',
-      drPhoneNumber: '',
-      drAge: '',
-      drPostCode: '',
-      drExperience: '',
-      drDay: '',
-      drStartTime: '',
-      drEndTime: '',
+      cleanName: '',
+      cleanFurigana: '',
+      cleanPhoneNumber: '',
+      cleanPostCode: '',
+      cleanExperience: '',
+      cleanNumOfAirCon: '',
+      cleanNumOfAirConOut: '',
+      cleanOtherRequest: '',
+      cleanOtherMenu: '',
+      dayOne: '',
+      startTimeOne: '',
+      endTimeOne: '',
+      dayTwo: '',
+      startTimeTwo: '',
+      endTimeTwo: '',
+      dayThree: '',
+      startTimeThree: '',
+      endTimeThree: '',
+      cleanAddress: '',
+      cleanBike: '',
+      cleanOtherWarning: '',
     },
   })
 
   const orderFields: RegisterFieldKeys[] = [
-    'drName',
-    'drPhoneNumber',
-    'drAge',
-    'drPostCode',
-    'drExperience',
+    'cleanName',
+    'cleanFurigana',
+    'cleanPhoneNumber',
+    'cleanPostCode',
+    'cleanExperience',
+    'cleanNumOfAirCon',
+    'cleanNumOfAirConOut',
+    'cleanOtherRequest',
+    'cleanOtherMenu',
+    'dayOne',
+    'startTimeOne',
+    'endTimeOne',
+    'dayTwo',
+    'startTimeTwo',
+    'endTimeTwo',
+    'dayThree',
+    'startTimeThree',
+    'endTimeThree',
+    'cleanAddress',
+    'cleanBike',
+    'cleanOtherWarning',
   ]
 
   const ref = useRef<HTMLDivElement>(null)
@@ -101,73 +145,45 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
   const [isSending, setIsSending] = useState<boolean>(false)
   const [errorMsg, setErrorMsg] = useState<string>('')
   const [postCode, setPostCode] = useState<string>('')
-  const [isHiddenImg, setIsHiddenImg] = useState(false)
   const [isDisableAutoScroll, setIsDisableAutoScroll] = useState(disableAutoScroll)
   const address = lookupAddress(postCode)
 
-  const isLiBa = [
-    'libinst',
-    'libx',
-    'libtiktok',
-    'libtube',
-    'libsg',
-    'asJVWJ7x',
-    'ahmeazEW',
-    'lNDY2w6W',
-    'Wmw0cffI',
-    'libyahoo',
-    'libbaitoru',
-    'libindeed',
-    'libjmty0',
-    'libindeed0',
-    'libjmty',
-    'libyda',
-  ].includes(adsCode as string)
-
   const [renderedFields, setRenderedFields] = useState<
-    Record<RegisterFieldKeys, { type: 'radio' | 'select' | 'input'; displayed: boolean }>
+    Record<RegisterFieldKeys, { type: 'radio' | 'select' | 'input' | 'multiselect' | 'date' | 'textarea'; displayed: boolean }>
   >({
-    drName: {
-      type: 'input',
-      displayed: false,
-    },
-    drPhoneNumber: {
-      type: 'input',
-      displayed: false,
-    },
-    drAge: {
-      type: 'input',
-      displayed: false,
-    },
-    drPostCode: {
-      type: 'input',
-      displayed: false,
-    },
-    drExperience: {
-      type: 'radio',
-      displayed: false,
-    },
+    cleanName: { type: 'input', displayed: true },
+    cleanFurigana: { type: 'input', displayed: false },
+    cleanPhoneNumber: { type: 'input', displayed: false },
+    cleanPostCode: { type: 'input', displayed: false },
+    cleanExperience: { type: 'radio', displayed: false },
+    cleanNumOfAirCon: { type: 'select', displayed: false },
+    cleanNumOfAirConOut: { type: 'select', displayed: false },
+    cleanOtherRequest: { type: 'input', displayed: false },
+    cleanOtherMenu: { type: 'multiselect', displayed: false },
+    dayOne: { type: 'date', displayed: false },
+    startTimeOne: { type: 'select', displayed: false },
+    endTimeOne: { type: 'select', displayed: false },
+    dayTwo: { type: 'date', displayed: false },
+    startTimeTwo: { type: 'select', displayed: false },
+    endTimeTwo: { type: 'select', displayed: false },
+    dayThree: { type: 'date', displayed: false },
+    startTimeThree: { type: 'select', displayed: false },
+    endTimeThree: { type: 'select', displayed: false },
+    cleanAddress: { type: 'input', displayed: false },
+    cleanBike: { type: 'radio', displayed: false },
+    cleanOtherWarning: { type: 'textarea', displayed: false },
   })
 
   useEffect(() => {
     if (nameParams && phoneParams) {
-      setValue('drName', nameParams)
-      setValue('drPhoneNumber', phoneParams)
-      setRenderedFields({
-        ...renderedFields,
-        drName: {
-          type: 'input',
-          displayed: true,
-        },
-        drPhoneNumber: {
-          type: 'input',
-          displayed: true,
-        },
-        drAge: {
-          type: 'input',
-          displayed: true,
-        },
-      })
+      setValue('cleanName', nameParams)
+      setValue('cleanPhoneNumber', phoneParams)
+      setRenderedFields((prev) => ({
+        ...prev,
+        cleanName: { type: 'input', displayed: true },
+        cleanFurigana: { type: 'input', displayed: true },
+        cleanPhoneNumber: { type: 'input', displayed: true },
+      }))
     }
   }, [nameParams, phoneParams])
 
@@ -204,56 +220,78 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
   }, [renderedFields, ref])
 
   useEffect(() => {
-    setPostCode(fields.drPostCode)
+    setPostCode(fields.cleanPostCode)
   }, [fields])
 
-  useEffect(() => {
-    setIsHiddenImg(hiddenCoverImg || false)
-  }, [])
-
-  const getJapaneseLabel = (experienceValue: string) => {
-    const foundItem = experienceItems.find((item) => item.value === experienceValue)
-    return foundItem ? foundItem.label : ''
+  const getExperienceLabel = (experienceValue: string) => {
+    const foundItem = usingItems.find((item) => item.value === experienceValue)
+    return foundItem ? foundItem.label : experienceValue
   }
 
-  const onSubmit = async (formData: DrFormInputs) => {
+  const onSubmit = async (formData: CleaningFormInputs) => {
     setIsSending(true)
-    const contatStartTime = isEmpty(formData.drStartTime) ? '指定なし' : formData.drStartTime
-    const contatEndTime = isEmpty(formData.drEndTime) ? '指定なし' : formData.drEndTime
-    const newAddress = address ? address.prefecture + address.address1 + address.address2 : ''
+    const newAddress = address ? address.prefecture + address.address1 + address.address2 : formData.cleanAddress
 
     try {
       // Save data to Spreadsheet
-      await transformResponse<{ data: DrFormInputs }>(
-        axiosInstance.post('/api/spreadsheet/driver_register', {
-          ...formData,
+      await transformResponse<{ data: CleaningFormInputs }>(
+        axiosInstance.post('/api/spreadsheet/cleaning_register', {
+          cleanName: formData.cleanName,
+          cleanFurigana: formData.cleanFurigana,
+          cleanPhoneNumber: formData.cleanPhoneNumber,
+          cleanPostCode: formData.cleanPostCode,
+          cleanExperience: getExperienceLabel(formData.cleanExperience),
+          cleanNumOfAirCon: formData.cleanNumOfAirCon,
+          cleanNumOfAirConOut: formData.cleanNumOfAirConOut,
+          cleanOtherRequest: formData.cleanOtherRequest,
+          cleanOtherMenu: formData.cleanOtherMenu,
+          appointmentDayOne: formData.dayOne ? dayjs(formData.dayOne).format('YYYY年MM月DD日') : '',
+          startTimeOne: formData.startTimeOne || '指定なし',
+          endTimeOne: formData.endTimeOne || '指定なし',
+          appointmentDayTwo: formData.dayTwo ? dayjs(formData.dayTwo).format('YYYY年MM月DD日') : '指定なし',
+          startTimeTwo: formData.startTimeTwo || '指定なし',
+          endTimeTwo: formData.endTimeTwo || '指定なし',
+          appointmentDayThree: formData.dayThree ? dayjs(formData.dayThree).format('YYYY年MM月DD日') : '指定なし',
+          startTimeThree: formData.startTimeThree || '指定なし',
+          endTimeThree: formData.endTimeThree || '指定なし',
+          cleanAddress: newAddress,
+          cleanBike: formData.cleanBike,
+          cleanOtherWarning: formData.cleanOtherWarning,
           adsCode,
-          drAddress: newAddress,
-          drExperience: getJapaneseLabel(formData.drExperience),
           registerDate: dayjs().format('YYYY-MM-DD'),
           registerTime: dayjs().format('HH:mm:ss'),
         }),
       )
 
       // LINE Notify
-      if (isLiBa) {
-        await transformResponse<{ data: DrFormInputs }>(
-          axiosInstance.post('/api/driver_line_notify', {
-            drName: formData.drName,
-            drAge: formData.drAge,
-            drPhoneNumber: formData.drPhoneNumber,
-            drPostCode: formData.drPostCode,
-            drExperience: getJapaneseLabel(formData.drExperience),
-            drAddress: newAddress,
-            drDay: formData.drDay,
-            drStartTime: contatStartTime,
-            drEndTime: contatEndTime,
-            adsCode,
-          }),
-        )
-      }
+      await transformResponse<{ data: CleaningFormInputs }>(
+        axiosInstance.post('/api/cleaning_line_notify', {
+          cleanName: formData.cleanName,
+          cleanFurigana: formData.cleanFurigana,
+          cleanPhoneNumber: formData.cleanPhoneNumber,
+          cleanPostCode: formData.cleanPostCode,
+          cleanExperience: getExperienceLabel(formData.cleanExperience),
+          cleanNumOfAirCon: formData.cleanNumOfAirCon,
+          cleanNumOfAirConOut: formData.cleanNumOfAirConOut,
+          cleanOtherRequest: formData.cleanOtherRequest,
+          cleanOtherMenu: formData.cleanOtherMenu,
+          appointmentDayOne: formData.dayOne ? dayjs(formData.dayOne).format('YYYY年MM月DD日') : '',
+          startTimeOne: formData.startTimeOne || '指定なし',
+          endTimeOne: formData.endTimeOne || '指定なし',
+          appointmentDayTwo: formData.dayTwo ? dayjs(formData.dayTwo).format('YYYY年MM月DD日') : '指定なし',
+          startTimeTwo: formData.startTimeTwo || '指定なし',
+          endTimeTwo: formData.endTimeTwo || '指定なし',
+          appointmentDayThree: formData.dayThree ? dayjs(formData.dayThree).format('YYYY年MM月DD日') : '指定なし',
+          startTimeThree: formData.startTimeThree || '指定なし',
+          endTimeThree: formData.endTimeThree || '指定なし',
+          cleanAddress: newAddress,
+          cleanBike: formData.cleanBike,
+          cleanOtherWarning: formData.cleanOtherWarning,
+          adsCode,
+        }),
+      )
 
-      router.push(`/recruit/register-thankyou?ecaiad=${adsCode}`)
+      router.push(`/recruit/cleaning-thankyou?ecaiad=${adsCode}`)
     } catch (e) {
       handleAPIErrors(e)
       setErrorMsg('送信エラーが発生しました。再度お応募してください。')
@@ -267,20 +305,15 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
   return (
     <>
       <Head>
-        <title>NANYARU-求人フォーム</title>
+        <title>NANYARU-クリーニング予約フォーム</title>
       </Head>
-
       <div>
-        {isHiddenImg ? (
-          <div className='text-center font-bold'>求人フォーム</div>
-        ) : (
-          <img className='mx-auto' src='/images/recruit/register_image.png' alt='' width='100%' />
-        )}
+          <div className='text-center font-bold'>クリーニング予約フォーム</div>
       </div>
       <div className='h-max w-screen max-w-screen-sm mx-auto overflow-x-hidden flex p-4 flex-col justify-start items-center'>
         <FormProvider {...methods}>
           <form className='w-full' onSubmit={(e: any) => e.preventDefault()}>
-            {formFieldKeys.map((key, index) => {
+            {orderFields.map((key, index) => {
               const value = fieldMap[key]
               const nextFieldKey = orderFields[index + 1]
               const inputType = fieldMap[key].inputType || 'text'
@@ -288,27 +321,84 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
               const placeholder = fieldMap[key].placeholder
               const orderLength = orderFields.length
 
-              let child = (
-                <InputField
-                  name={key}
-                  type={inputType}
-                  error={errors[key]}
-                  rules={rules}
-                  placeholder={placeholder}
-                />
-              )
+              // Skip end time fields - they are rendered with start time
+              if (['endTimeOne', 'endTimeTwo', 'endTimeThree'].includes(key)) {
+                return null
+              }
+
+              // Render time selection fields together
+              if (['startTimeOne', 'startTimeTwo', 'startTimeThree'].includes(key)) {
+                const endTimeKey = key.replace('start', 'end') as RegisterFieldKeys
+                if (!renderedFields[key]?.displayed) return null
+                
+                return (
+                  <React.Fragment key={key}>
+                    <FormField questionName={['時間帯']} isDriver>
+                      <div className='flex flex-row gap-2 w-full items-center'>
+                        <SelectField
+                          items={value.items}
+                          name={key}
+                          orderNumber={0}
+                          orderLength={0}
+                          error={errors[key]}
+                          rules={rules}
+                        />
+                        <div className='h-fit'>〜</div>
+                        <SelectField
+                          items={fieldMap[endTimeKey].items}
+                          name={endTimeKey}
+                          orderNumber={0}
+                          orderLength={0}
+                          error={errors[endTimeKey]}
+                          rules={fieldMap[endTimeKey].rules}
+                        />
+                      </div>
+                      <FormFieldInputButton
+                        disabled={false}
+                        onClickBtn={() => {
+                          if (nextFieldKey) {
+                            setRenderedFields((prev) => ({
+                              ...prev,
+                              [nextFieldKey]: { ...prev[nextFieldKey], displayed: true },
+                            }))
+                          }
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                    </FormField>
+                  </React.Fragment>
+                )
+              }
+
+              let child = null
 
               switch (value.type) {
                 case 'select':
                   child = (
-                    <SelectField
-                      items={value.items}
-                      name={key}
-                      orderNumber={index}
-                      orderLength={orderLength}
-                      error={errors[key]}
-                      rules={rules}
-                    />
+                    <>
+                      <SelectField
+                        items={value.items}
+                        name={key}
+                        orderNumber={index}
+                        orderLength={orderLength}
+                        error={errors[key]}
+                        rules={rules}
+                      />
+                      <FormFieldInputButton
+                        disabled={!Boolean(!isEmpty(fields[key]) && isEmpty(errors[key]?.message))}
+                        onClickBtn={() => {
+                          if (nextFieldKey) {
+                            setRenderedFields((prev) => ({
+                              ...prev,
+                              [nextFieldKey]: { ...prev[nextFieldKey], displayed: true },
+                            }))
+                          }
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                    </>
                   )
                   break
 
@@ -325,63 +415,128 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                       isDriver
                     />
                   )
-
                   break
 
-                default:
-                  {
-                    child = (
-                      <>
-                        <InputField
-                          name={key}
-                          type={inputType}
-                          suffix={value?.suffix}
-                          error={errors[key]}
-                          rules={rules}
-                          placeholder={placeholder}
-                        />
-                        <FormFieldInputButton
-                          disabled={
-                            !Boolean(!isEmpty(fields[key]) && isEmpty(errors[key]?.message))
-                          }
-                          onClickBtn={() => {
+                case 'multiselect':
+                  child = (
+                    <>
+                      <MultiSelectField
+                        items={value.items}
+                        name={key}
+                        orderNumber={index}
+                        orderLength={orderLength}
+                        error={errors[key]}
+                        rules={rules}
+                      />
+                      <FormFieldInputButton
+                        disabled={!Boolean(!isEmpty(fields[key]) && isEmpty(errors[key]?.message))}
+                        onClickBtn={() => {
+                          if (nextFieldKey) {
                             setRenderedFields((prev) => ({
                               ...prev,
                               [nextFieldKey]: { ...prev[nextFieldKey], displayed: true },
                             }))
-                            setIsDisableAutoScroll(false)
-                          }}
-                          isDriver
-                        />
-                        {orderFields.length > 0 && (
-                          <OrderField orderNumber={index} orderLength={orderLength} />
-                        )}
-                      </>
-                    )
-                  }
+                          }
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                    </>
+                  )
+                  break
+
+                case 'date':
+                  child = (
+                    <>
+                      <DateField
+                        name={key}
+                        error={errors[key]}
+                        rules={rules}
+                        dateFormat='yyyy年MM月dd日'
+                        placeholder='日付を選択してください'
+                        adsCode={adsCode || ''}
+                      />
+                      <FormFieldInputButton
+                        disabled={!Boolean(!isEmpty(fields[key]) && isEmpty(errors[key]?.message))}
+                        onClickBtn={() => {
+                          if (nextFieldKey) {
+                            setRenderedFields((prev) => ({
+                              ...prev,
+                              [nextFieldKey]: { ...prev[nextFieldKey], displayed: true },
+                            }))
+                          }
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                    </>
+                  )
+                  break
+
+                case 'textarea':
+                  child = (
+                    <>
+                      <TextareaField
+                        name={key}
+                        error={errors[key]}
+                        rules={rules}
+                        placeholder={placeholder}
+                      />
+                      <FormFieldInputButton
+                        disabled={false}
+                        onClickBtn={() => {
+                          setIsDisplayedSubmit(true)
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                    </>
+                  )
+                  break
+
+                default:
+                  child = (
+                    <>
+                      <InputField
+                        name={key}
+                        type={inputType}
+                        suffix={value?.suffix}
+                        error={errors[key]}
+                        rules={rules}
+                        placeholder={placeholder}
+                      />
+                      <FormFieldInputButton
+                        disabled={!Boolean(!isEmpty(fields[key]) && isEmpty(errors[key]?.message))}
+                        onClickBtn={() => {
+                          if (nextFieldKey) {
+                            setRenderedFields((prev) => ({
+                              ...prev,
+                              [nextFieldKey]: { ...prev[nextFieldKey], displayed: true },
+                            }))
+                          }
+                          setIsDisableAutoScroll(false)
+                        }}
+                        isDriver
+                      />
+                      {orderLength > 0 && (
+                        <OrderField orderNumber={index} orderLength={orderLength} />
+                      )}
+                    </>
+                  )
                   break
               }
 
-              if (!index) {
-                return (
-                  <React.Fragment key={key}>
-                    <FormField key={`${key}-${index}`} questionName={value.question} isDriver>
-                      {child}
-                    </FormField>
-                  </React.Fragment>
-                )
-              }
-              if (renderedFields[key].displayed) {
-                return (
-                  <React.Fragment key={key}>
-                    <FormField key={`${key}-${index}`} questionName={value.question} isDriver>
-                      {child}
-                    </FormField>
-                  </React.Fragment>
-                )
+              if (!renderedFields[key]?.displayed) {
+                return null
               }
 
-              return null
+              return (
+                <React.Fragment key={key}>
+                  <FormField key={`${key}-${index}`} questionName={value.question} isDriver>
+                    {child}
+                  </FormField>
+                </React.Fragment>
+              )
             })}
 
             {isDisplayedSubmit && (
@@ -394,7 +549,7 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                 disabled={!isValid || isSending}
                 onClick={handleSubmit(onSubmit)}
               >
-                {isSending ? '送信中...' : '応募する'}
+                {isSending ? '送信中...' : '予約する'}
               </button>
             )}
           </form>
@@ -406,4 +561,12 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
   )
 }
 
-export default Register
+function RegisterPage() {
+  return (
+    <Suspense fallback={<div className='w-screen h-screen flex items-center justify-center'>Loading...</div>}>
+      <Register code="" />
+    </Suspense>
+  )
+}
+
+export default RegisterPage

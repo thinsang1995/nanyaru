@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { useRouter, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
 import Image from 'next/image'
 import FloatingCTA from '@/components/FloatingCTA'

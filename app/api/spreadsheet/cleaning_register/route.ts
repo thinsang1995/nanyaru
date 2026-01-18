@@ -77,7 +77,8 @@ export async function POST(request: NextRequest) {
     ]
 
     const getLastRowResponse = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: process.env.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID,
+      spreadsheetId:
+        process.env.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID,
       range: `${SHEET_NAME}!A2:A`,
     })
 
@@ -85,7 +86,8 @@ export async function POST(request: NextRequest) {
     const newRow = lastRow + 2
 
     await sheetsClient.spreadsheets.values.update({
-      spreadsheetId: process.env.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID,
+      spreadsheetId:
+        process.env.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID || process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID,
       range: `${SHEET_NAME}!A${newRow}:V${newRow}`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {

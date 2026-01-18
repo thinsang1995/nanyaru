@@ -48,9 +48,9 @@ const DateField: React.FC<IDateFieldProps> = ({
     <Controller
       render={({ field: { onChange, value, ...fieldRest }, formState, fieldState }) => {
         // Ensure value is a valid Date object
-        const selectedDate = value instanceof Date ? value : (value ? new Date(value) : null)
+        const selectedDate = value instanceof Date ? value : value ? new Date(value) : null
         const isValidDate = selectedDate && !isNaN(selectedDate.getTime())
-        
+
         return (
           <div className='flex flex-col w-full relative'>
             <DatePicker
@@ -72,8 +72,18 @@ const DateField: React.FC<IDateFieldProps> = ({
               disabledKeyboardNavigation
             />
             <div className='absolute top-3 right-3 pointer-events-none'>
-              <svg className='w-5 h-5 text-green-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' />
+              <svg
+                className='w-5 h-5 text-green-500'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+                />
               </svg>
             </div>
             {error?.message && <ErrorMessage message={error.message} />}

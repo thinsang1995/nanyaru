@@ -17,16 +17,16 @@ async function uploadToImgbb(file: File): Promise<string | null> {
   try {
     const arrayBuffer = await file.arrayBuffer()
     const base64 = Buffer.from(arrayBuffer).toString('base64')
-    
+
     const formData = new FormData()
     formData.append('key', imgbbApiKey)
     formData.append('image', base64)
-    
+
     const response = await fetch('https://api.imgbb.com/1/upload', {
       method: 'POST',
       body: formData,
     })
-    
+
     if (response.ok) {
       const data = await response.json()
       return data.data?.url || null
@@ -41,29 +41,29 @@ async function uploadToImgbb(file: File): Promise<string | null> {
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-    
-    const cleanName = formData.get('cleanName') as string || ''
-    const cleanFurigana = formData.get('cleanFurigana') as string || ''
-    const cleanPhoneNumber = formData.get('cleanPhoneNumber') as string || ''
-    const cleanExperience = formData.get('cleanExperience') as string || ''
-    const cleanNumOfAirCon = formData.get('cleanNumOfAirCon') as string || ''
-    const cleanNumOfAirConOut = formData.get('cleanNumOfAirConOut') as string || ''
-    const cleanOtherRequest = formData.get('cleanOtherRequest') as string || ''
-    const cleanOtherMenu = formData.get('cleanOtherMenu') as string || ''
-    const appointmentDayOne = formData.get('appointmentDayOne') as string || ''
-    const startTimeOne = formData.get('startTimeOne') as string || ''
-    const endTimeOne = formData.get('endTimeOne') as string || ''
-    const appointmentDayTwo = formData.get('appointmentDayTwo') as string || ''
-    const startTimeTwo = formData.get('startTimeTwo') as string || ''
-    const endTimeTwo = formData.get('endTimeTwo') as string || ''
-    const appointmentDayThree = formData.get('appointmentDayThree') as string || ''
-    const startTimeThree = formData.get('startTimeThree') as string || ''
-    const endTimeThree = formData.get('endTimeThree') as string || ''
-    const cleanAddress = formData.get('cleanAddress') as string || ''
-    const cleanBike = formData.get('cleanBike') as string || ''
-    const cleanOtherWarning = formData.get('cleanOtherWarning') as string || ''
-    const adsCode = formData.get('adsCode') as string || ''
-    
+
+    const cleanName = (formData.get('cleanName') as string) || ''
+    const cleanFurigana = (formData.get('cleanFurigana') as string) || ''
+    const cleanPhoneNumber = (formData.get('cleanPhoneNumber') as string) || ''
+    const cleanExperience = (formData.get('cleanExperience') as string) || ''
+    const cleanNumOfAirCon = (formData.get('cleanNumOfAirCon') as string) || ''
+    const cleanNumOfAirConOut = (formData.get('cleanNumOfAirConOut') as string) || ''
+    const cleanOtherRequest = (formData.get('cleanOtherRequest') as string) || ''
+    const cleanOtherMenu = (formData.get('cleanOtherMenu') as string) || ''
+    const appointmentDayOne = (formData.get('appointmentDayOne') as string) || ''
+    const startTimeOne = (formData.get('startTimeOne') as string) || ''
+    const endTimeOne = (formData.get('endTimeOne') as string) || ''
+    const appointmentDayTwo = (formData.get('appointmentDayTwo') as string) || ''
+    const startTimeTwo = (formData.get('startTimeTwo') as string) || ''
+    const endTimeTwo = (formData.get('endTimeTwo') as string) || ''
+    const appointmentDayThree = (formData.get('appointmentDayThree') as string) || ''
+    const startTimeThree = (formData.get('startTimeThree') as string) || ''
+    const endTimeThree = (formData.get('endTimeThree') as string) || ''
+    const cleanAddress = (formData.get('cleanAddress') as string) || ''
+    const cleanBike = (formData.get('cleanBike') as string) || ''
+    const cleanOtherWarning = (formData.get('cleanOtherWarning') as string) || ''
+    const adsCode = (formData.get('adsCode') as string) || ''
+
     // Get images
     const images = formData.getAll('images') as File[]
 
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
           try {
             // Upload to imgbb to get public HTTPS URL
             const imageUrl = await uploadToImgbb(image)
-            
+
             if (imageUrl) {
               // Send image via LINE Messaging API
               await client.pushMessage({

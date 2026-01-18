@@ -73,14 +73,14 @@ const timeItems = [
 ]
 
 export const bikeItems = [
-  { label: '有り', value: '0台' },
-  { label: '無し', value: '1台' },
-  { label: '確認中', value: '1台' },
+  { label: '有り', value: '有り' },
+  { label: '無し', value: '無し' },
+  { label: '確認中', value: '確認中' },
 ]
 
 export const chidrenEducateItems = [
-  { label: '有り', value: '0台' },
-  { label: '無し', value: '1台' },
+  { label: '有り', value: '有り' },
+  { label: '無し', value: '無し' },
 ]
 
 type IFieldValue = {
@@ -212,7 +212,7 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     type: 'input',
     inputType: 'text',
     question: ['エアコンクリーニングをご希望の方はもしわかれば型番をご記入ください。'],
-    placeholder: '例：田中 太郎',
+    placeholder: '例：CS-X401D2',
     rules: {},
   },
   cleanOtherMenu: {

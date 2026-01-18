@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, FieldError, useFormContext } from 'react-hook-form'
@@ -27,6 +27,7 @@ const DateField: React.FC<IDateFieldProps> = ({
   adsCode,
 }) => {
   const { control } = useFormContext()
+  const [minDate, setMinDate] = useState<Date | null>(null)
 
   const isLiBa = [
     'libyahoo',
@@ -44,9 +45,16 @@ const DateField: React.FC<IDateFieldProps> = ({
     return date.getDay() !== 0
   }
 
-  const today = new Date()
-  const tomorrow = new Date(today)
-  tomorrow.setDate(tomorrow.getDate() + 1)
+  useEffect(() => {
+    const today = new Date()
+    if (isLiBa) {
+      setMinDate(today)
+    } else {
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      setMinDate(tomorrow)
+    }
+  }, [isLiBa])
 
   const baseClassName =
     'block w-full p-2.5 mt-2 text-black text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
@@ -64,7 +72,7 @@ const DateField: React.FC<IDateFieldProps> = ({
               placeholderText={placeholder}
               selected={value}
               onChange={(date: Date | null) => onChange(date)}
-              minDate={isLiBa ? today : tomorrow}
+              minDate={minDate ?? undefined}
               filterDate={isSunday}
               className={
                 isLarge

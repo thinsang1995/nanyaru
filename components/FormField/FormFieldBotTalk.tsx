@@ -30,8 +30,8 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({
           </div>
           <div
             className='relative w-fit bg-slate-200 py-4 px-4 ml-4 rounded-md 
-          before:absolute before:content-[""] before:top-4 before:left-[-15px] before:w-4 before:h-4 
-          before:border-t-solid before:border-t-white before:border-t-[10px] before:border-b-solid before:border-b-white before:border-b-[10px] before:border-r-solid before:border-r-bg-slate-200 before:border-r-[15px]'
+          before:absolute before:content-[""] before:top-4 before:left-[-15px] before:w-0 before:h-0 
+          before:border-t-[10px] before:border-t-transparent before:border-b-[10px] before:border-b-transparent before:border-r-[15px] before:border-r-slate-200'
           >
             {questionName.map((question) => (
               <Fragment key={question}>

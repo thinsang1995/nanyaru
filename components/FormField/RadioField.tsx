@@ -27,7 +27,7 @@ const RadioField: React.FC<IRadioFieldProps> = ({
   orderNumber,
   orderLength,
   isDriver,
-  gridCol = 1,
+  gridCol=1,
 }) => {
   const { control } = useFormContext()
 

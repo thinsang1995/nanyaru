@@ -63,7 +63,7 @@ const DateField: React.FC<IDateFieldProps> = ({
               id={name}
               placeholderText={placeholder}
               selected={value}
-              onChange={(date) => onChange(date)}
+              onChange={(date: Date | null) => onChange(date)}
               minDate={isLiBa ? today : tomorrow}
               filterDate={isSunday}
               className={

@@ -19,7 +19,7 @@ const FormFieldInputButton: React.FC<IFormFieldInputButtonProps> = ({
       type='button'
       onClick={onClickBtn}
       className='w-full inline-flex justify-center items-center mt-2 py-3 px-5 
-      text-sm font-medium text-black bg-white 
+      text-sm font-medium text-black bg-white outline-none border border-gray-300
       rounded-lg border 
       focus:z-10 focus:ring-2'
       style={{ background: isDriver ? '#fce50e' : '' }}

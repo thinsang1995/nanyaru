@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { useRouter, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
 import Image from 'next/image'
 import FloatingCTA from '@/components/FloatingCTA'
@@ -38,9 +37,6 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const lineUrl = '' // Add your LINE URL here
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const adsCode = searchParams.get('ecaiad')
 
   return (
     <>

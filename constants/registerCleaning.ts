@@ -3,7 +3,6 @@ import { RulesProps } from '../typing/utils'
 type RegisterFieldKeys =
   | 'cleanName'
   | 'cleanFurigana'
-  | 'cleanAge'
   | 'cleanPostCode'
   | 'cleanExperience'
   | 'cleanPhoneNumber'
@@ -86,7 +85,7 @@ export const chidrenEducateItems = [
 
 type IFieldValue = {
   items: { label: string; value: string }[]
-  type: 'radio' | 'select' | 'input' | 'multiselect' | 'date'
+  type: 'radio' | 'select' | 'input' | 'multiselect' | 'date' | 'textarea'
   inputType?: 'text' | 'tel'
   question: string[]
   suffix?: string[]

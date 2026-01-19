@@ -3,7 +3,6 @@ import { RulesProps } from '../typing/utils'
 type RegisterFieldKeys =
   | 'cleanName'
   | 'cleanFurigana'
-  | 'cleanPostCode'
   | 'cleanExperience'
   | 'cleanPhoneNumber'
   | 'cleanNumOfAirCon'
@@ -23,6 +22,7 @@ type RegisterFieldKeys =
   | 'cleanAddress'
   | 'cleanBike'
   | 'cleanOtherWarning'
+  | 'cleanAirConNumber'
 
 type RegisterFields = Record<RegisterFieldKeys, string>
 
@@ -36,6 +36,9 @@ export const airConItems = [
   { label: '1台', value: '1台' },
   { label: '2台', value: '2台' },
   { label: '3台', value: '3台' },
+  { label: '4台', value: '4台' },
+  { label: '5台', value: '5台' },
+  { label: '5台以上', value: '5台以上' },
 ]
 
 export const airConOutItems = [
@@ -43,6 +46,9 @@ export const airConOutItems = [
   { label: '1台', value: '1台' },
   { label: '2台', value: '2台' },
   { label: '3台', value: '3台' },
+  { label: '4台', value: '4台' },
+  { label: '5台', value: '5台' },
+  { label: '5台以上', value: '5台以上' },
 ]
 
 export const otherMenuItems = [
@@ -158,26 +164,13 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
       },
     },
   },
-  cleanPostCode: {
+  cleanAddress: {
     items: [],
     type: 'input',
-    inputType: 'tel',
-    question: ['郵便番号を教えてください。'],
-    placeholder: '例：1110001',
-    rules: {
-      required: {
-        value: true,
-        message: '郵便番号を入力してください。',
-      },
-      pattern: {
-        value: /(\d{3})(\d{4})/,
-        message: '有効な郵便番号を入力してください。',
-      },
-      maxLength: {
-        value: 8,
-        message: '有効な郵便番号を入力してください。',
-      },
-    },
+    inputType: 'text',
+    question: ['住所を教えてください。'],
+    placeholder: '例)〇〇区〇〇番地(マンション名)',
+    rules: {},
   },
   cleanExperience: {
     items: usingItems,
@@ -218,6 +211,12 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     inputType: 'text',
     question: ['エアコンクリーニングをご希望の方はもしわかれば型番をご記入ください。'],
     placeholder: '例：CS-X401D2',
+    rules: {},
+  },
+    cleanAirConNumber: {
+    items: [],
+    type: 'image',
+    question: ['エアコンの型番の記載ある箇所の画像があればアップロードしてください。'],
     rules: {},
   },
   cleanImages: {
@@ -296,19 +295,12 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     question: [''],
     rules: {},
   },
-  cleanAddress: {
-    items: [],
-    type: 'input',
-    inputType: 'text',
-    question: ['住所を教えてください。'],
-    placeholder: '例)〇〇区〇〇番地(マンション名)',
-    rules: {},
-  },
+
   cleanBike: {
     items: bikeItems,
     type: 'radio',
     question: [
-      '当日は三輪バイクでお伺いさせていただきます。敷地内に駐輪スペースはございますか?(路上駐車はお断りさせていただいています。)',
+      '当日は三輪バイクでお伺いさせていただきます。敷地内に駐輪スペースはございますか?',
     ],
     rules: {
       required: {

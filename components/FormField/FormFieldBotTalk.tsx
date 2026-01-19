@@ -18,9 +18,7 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({
         <div className='flex justify-between w-full'>
           <div className='mt-2 overflow-hidden relative w-10 h-10 bg-linear-to-br from-green-400 to-green-500 rounded-full shadow-md shrink-0'>
             <Image
-              src={
-                isDriver ? '/images/recruit/register_bot.png' : '/images/worksheet/bot-image.png'
-              }
+              src='/images/cleaning/register_bot.png'
               alt='bot-image'
               width={100}
               height={100}

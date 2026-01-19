@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
     const cleanName = formData.get('cleanName') as string || ''
     const cleanFurigana = formData.get('cleanFurigana') as string || ''
     const cleanPhoneNumber = formData.get('cleanPhoneNumber') as string || ''
-    const cleanPostCode = formData.get('cleanPostCode') as string || ''
     const cleanExperience = formData.get('cleanExperience') as string || ''
     const cleanNumOfAirCon = formData.get('cleanNumOfAirCon') as string || ''
     const cleanNumOfAirConOut = formData.get('cleanNumOfAirConOut') as string || ''
@@ -73,7 +72,6 @@ export async function POST(request: NextRequest) {
 ○お名前：${cleanName}
 ○フリガナ：${cleanFurigana}
 ○電話番号：${cleanPhoneNumber}
-○郵便番号：${cleanPostCode}
 ○住所：${cleanAddress}
 ○ご利用経験：${cleanExperience}
 ○エアコン(お掃除機能なし)：${cleanNumOfAirCon}

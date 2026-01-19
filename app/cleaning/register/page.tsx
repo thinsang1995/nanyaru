@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useRef, useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import dayjs from 'dayjs'
 import { FieldError, FormProvider, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Head from 'next/head'
-import { Oaza } from 'jp-zipcode-lookup'
 import fieldMap, { RegisterFieldKeys, usingItems } from '../../../constants/registerCleaning'
 import axiosInstance, { handleAPIErrors } from '../../../utils/axiosInstance'
 import transformResponse from '../../../utils/transformResponse'
@@ -23,11 +22,12 @@ export type CleaningFormInputs = {
   cleanName: string
   cleanFurigana: string
   cleanPhoneNumber: string
-  cleanPostCode: string
+  cleanAddress: string
   cleanExperience: string
   cleanNumOfAirCon: string
   cleanNumOfAirConOut: string
   cleanOtherRequest: string
+  cleanAirConNumber: File[]
   cleanImages: File[]
   cleanOtherMenu: string
   dayOne: string
@@ -39,19 +39,11 @@ export type CleaningFormInputs = {
   dayThree: string
   startTimeThree: string
   endTimeThree: string
-  cleanAddress: string
   cleanBike: string
   cleanOtherWarning: string
   adsCode?: string
   registerTime?: string
   registerDate?: string
-}
-
-type Address = {
-  prefectureCode: string // 都道府県コード
-  prefecture: string // 都道府県
-  address1: string // 市区町村
-  address2: string // 市区町村配下
 }
 
 type RegisterProps = {
@@ -60,32 +52,19 @@ type RegisterProps = {
   disableAutoScroll?: boolean
 }
 
-function lookupAddress(postCode: string): Address | null {
-  if (postCode.length < 7) return null
-
-  const result = Oaza.byZipcode(postCode)[0]
-  if (!result) return null
-
-  return {
-    prefectureCode: result.pref.code,
-    prefecture: result.pref.name,
-    address1: result.city.name,
-    address2: result.name,
-  }
-}
-
-const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoScroll = true }) => {
+const Register: React.FC<RegisterProps> = () => {
   const methods = useForm<CleaningFormInputs>({
     mode: 'onChange',
     defaultValues: {
       cleanName: '',
       cleanFurigana: '',
       cleanPhoneNumber: '',
-      cleanPostCode: '',
+      cleanAddress: '',
       cleanExperience: '',
       cleanNumOfAirCon: '',
       cleanNumOfAirConOut: '',
       cleanOtherRequest: '',
+      cleanAirConNumber: [],
       cleanImages: [],
       cleanOtherMenu: '',
       dayOne: '',
@@ -97,7 +76,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
       dayThree: '',
       startTimeThree: '',
       endTimeThree: '',
-      cleanAddress: '',
       cleanBike: '',
       cleanOtherWarning: '',
     },
@@ -107,11 +85,12 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
     'cleanName',
     'cleanFurigana',
     'cleanPhoneNumber',
-    'cleanPostCode',
+    'cleanAddress',
     'cleanExperience',
     'cleanNumOfAirCon',
     'cleanNumOfAirConOut',
     'cleanOtherRequest',
+    'cleanAirConNumber',
     'cleanImages',
     'cleanOtherMenu',
     'dayOne',
@@ -123,12 +102,10 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
     'dayThree',
     'startTimeThree',
     'endTimeThree',
-    'cleanAddress',
     'cleanBike',
     'cleanOtherWarning',
   ]
 
-  const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const adsCode = searchParams.get('ecaiad')
@@ -141,12 +118,9 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
     formState: { errors, isValid },
     setValue,
   } = methods
-  const fields = watch()
 
   const [isSending, setIsSending] = useState<boolean>(false)
   const [errorMsg, setErrorMsg] = useState<string>('')
-  const [postCode, setPostCode] = useState<string>('')
-  const address = lookupAddress(postCode)
 
   useEffect(() => {
     if (nameParams && phoneParams) {
@@ -154,10 +128,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
       setValue('cleanPhoneNumber', phoneParams)
     }
   }, [nameParams, phoneParams])
-
-  useEffect(() => {
-    setPostCode(fields.cleanPostCode)
-  }, [fields])
 
   const getExperienceLabel = (experienceValue: string) => {
     const foundItem = usingItems.find((item) => item.value === experienceValue)
@@ -176,7 +146,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
 
   const onSubmit = async (formData: CleaningFormInputs) => {
     setIsSending(true)
-    const newAddress = address ? address.prefecture + address.address1 + address.address2 : formData.cleanAddress
 
     try {
       // Save data to Spreadsheet
@@ -185,7 +154,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
           cleanName: formData.cleanName,
           cleanFurigana: formData.cleanFurigana,
           cleanPhoneNumber: formData.cleanPhoneNumber,
-          cleanPostCode: formData.cleanPostCode,
           cleanExperience: getExperienceLabel(formData.cleanExperience),
           cleanNumOfAirCon: formData.cleanNumOfAirCon,
           cleanNumOfAirConOut: formData.cleanNumOfAirConOut,
@@ -200,7 +168,7 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
           appointmentDayThree: formData.dayThree ? dayjs(formData.dayThree).format('YYYY年MM月DD日') : '指定なし',
           startTimeThree: formData.startTimeThree || '指定なし',
           endTimeThree: formData.endTimeThree || '指定なし',
-          cleanAddress: newAddress,
+          cleanAddress: formData.cleanAddress,
           cleanBike: formData.cleanBike,
           cleanOtherWarning: formData.cleanOtherWarning,
           adsCode,
@@ -214,7 +182,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
       lineFormData.append('cleanName', formData.cleanName)
       lineFormData.append('cleanFurigana', formData.cleanFurigana)
       lineFormData.append('cleanPhoneNumber', formData.cleanPhoneNumber)
-      lineFormData.append('cleanPostCode', formData.cleanPostCode)
       lineFormData.append('cleanExperience', getExperienceLabel(formData.cleanExperience))
       lineFormData.append('cleanNumOfAirCon', formData.cleanNumOfAirCon)
       lineFormData.append('cleanNumOfAirConOut', formData.cleanNumOfAirConOut)
@@ -229,14 +196,21 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
       lineFormData.append('appointmentDayThree', formData.dayThree ? dayjs(formData.dayThree).format('YYYY年MM月DD日') : '指定なし')
       lineFormData.append('startTimeThree', formData.startTimeThree || '指定なし')
       lineFormData.append('endTimeThree', formData.endTimeThree || '指定なし')
-      lineFormData.append('cleanAddress', newAddress)
+      lineFormData.append('cleanAddress', formData.cleanAddress)
       lineFormData.append('cleanBike', formData.cleanBike)
       lineFormData.append('cleanOtherWarning', formData.cleanOtherWarning)
       lineFormData.append('adsCode', adsCode || '')
       
-      // Append images
+      // Append air conditioner number images
+      if (formData.cleanAirConNumber && formData.cleanAirConNumber.length > 0) {
+        formData.cleanAirConNumber.forEach((file) => {
+          lineFormData.append('airConImages', file)
+        })
+      }
+
+      // Append cleaning spot images
       if (formData.cleanImages && formData.cleanImages.length > 0) {
-        formData.cleanImages.forEach((file, index) => {
+        formData.cleanImages.forEach((file) => {
           lineFormData.append('images', file)
         })
       }
@@ -330,8 +304,8 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                       <SelectField
                         items={value.items}
                         name={key}
-                        orderNumber={index}
-                        orderLength={orderLength}
+                        orderNumber={0}
+                        orderLength={0}
                         error={errors[key]as FieldError | undefined}
                         rules={rules}
                       />
@@ -343,8 +317,8 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                     <RadioField
                       items={value.items}
                       name={key}
-                      orderNumber={index}
-                      orderLength={orderLength}
+                      orderNumber={0}
+                      orderLength={0}
                       error={errors[key] as FieldError | undefined}
                       rules={rules}
                       // 1-3 items → show according to number of items
@@ -361,8 +335,8 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                       <MultiSelectField
                         items={value.items}
                         name={key}
-                        orderNumber={index}
-                        orderLength={orderLength}
+                        orderNumber={0}
+                        orderLength={0}
                         error={errors[key] as FieldError | undefined}
                         rules={rules}
                       />
@@ -406,7 +380,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
 
                 default:
                   child = (
-                    <>
                       <InputField
                         name={key}
                         type={inputType}
@@ -415,10 +388,6 @@ const Register: React.FC<RegisterProps> = ({ code, hiddenCoverImg, disableAutoSc
                         rules={rules}
                         placeholder={placeholder}
                       />
-                      {orderLength > 0 && (
-                        <OrderField orderNumber={index} orderLength={orderLength} />
-                      )}
-                    </>
                   )
                   break
               }

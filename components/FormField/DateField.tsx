@@ -24,37 +24,20 @@ const DateField: React.FC<IDateFieldProps> = ({
   className,
   placeholder,
   dateFormat,
-  adsCode,
 }) => {
   const { control } = useFormContext()
   const [minDate, setMinDate] = useState<Date | null>(null)
 
-  const isLiBa = [
-    'libyahoo',
-    'libbaitoru',
-    'libindeed',
-    'libjmty0',
-    'libindeed0',
-    'libjmty',
-    'libyda',
-    'libsg',
-  ].includes(adsCode as string)
-
   const isSunday = (date: Date) => {
-    if (isLiBa) return date.getDay() !== 7
     return date.getDay() !== 0
   }
 
   useEffect(() => {
     const today = new Date()
-    if (isLiBa) {
-      setMinDate(today)
-    } else {
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      setMinDate(tomorrow)
-    }
-  }, [isLiBa])
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    setMinDate(tomorrow)
+  }, [])
 
   const baseClassName =
     'block w-full p-3 text-black text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-200 bg-gray-50 hover:bg-white cursor-pointer'

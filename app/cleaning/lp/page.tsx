@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  const lineUrl = '' // Add your LINE URL here
+  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
 
   return (
     <>
@@ -118,9 +118,9 @@ export default function Home() {
                 <br />
                 即日対応!
               </p>
-              <p className='cta_txt'>
+              {/* <p className='cta_txt'>
                 <span className='slash'>500円クーポン配布中!</span>
-              </p>
+              </p> */}
               <div className='cta_btn'>
                 <a
                   href={lineUrl}
@@ -183,7 +183,7 @@ export default function Home() {
                 </p>
                 <p className='cp_ttl3 cp_txt3'>60~90分でサッと終わるプロの分解清掃</p>
               </div>
-              <div className='credit'>
+              {/* <div className='credit'>
                 <h4>各種クレジットカード対応</h4>
                 <p>
                   <Image
@@ -194,7 +194,7 @@ export default function Home() {
                     height={80}
                   />
                 </p>
-              </div>
+              </div> */}
             </div>
           </section>
 
@@ -428,9 +428,9 @@ export default function Home() {
                   height={200}
                 />
                 <p className='cta_ttl'>LINEで24時間 即日対応!</p>
-                <p className='cta_txt'>
+                {/* <p className='cta_txt'>
                   <span className='slash'>500円クーポン配布中！</span>
-                </p>
+                </p> */}
                 <div className='cta_btn'>
                   <a
                     href={lineUrl}
@@ -578,9 +578,9 @@ export default function Home() {
                   height={200}
                 />
                 <p className='cta_ttl'>LINEで24時間 即日対応!</p>
-                <p className='cta_txt'>
+                {/* <p className='cta_txt'>
                   <span className='slash'>500円クーポン配布中！</span>
-                </p>
+                </p> */}
                 <div className='cta_btn'>
                   <a
                     href={lineUrl}
@@ -1072,7 +1072,7 @@ export default function Home() {
           </section>
 
           {/* Secret/Coupon Section */}
-          <section className='contents_block' id='secret'>
+          {/* <section className='contents_block' id='secret'>
             <div className='inner'>
               <h2 className='ttl_coupon'>
                 <Image
@@ -1092,7 +1092,7 @@ export default function Home() {
                 height={300}
               />
             </div>
-          </section>
+          </section> */}
 
           {/* CTA Section 3 */}
           <section className='cta bg05' id='cta1'>
@@ -1106,9 +1106,9 @@ export default function Home() {
                   height={200}
                 />
                 <p className='cta_ttl'>LINEで24時間 即日対応!</p>
-                <p className='cta_txt'>
+                {/* <p className='cta_txt'>
                   <span className='slash'>500円クーポン配布中！</span>
-                </p>
+                </p> */}
                 <div className='cta_btn'>
                   <a
                     href={lineUrl}
@@ -1241,9 +1241,9 @@ export default function Home() {
                   height={200}
                 />
                 <p className='cta_ttl'>LINEで24時間 即日対応!</p>
-                <p className='cta_txt'>
+                {/* <p className='cta_txt'>
                   <span className='slash'>500円クーポン配布中！</span>
-                </p>
+                </p> */}
                 <div className='cta_btn'>
                   <a
                     href={lineUrl}

@@ -7,8 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      NODE_OPTIONS: --max_old_space_size=4096
 
     steps:
       - name: Checkout source
@@ -39,7 +37,7 @@ jobs:
           NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID: ${{ secrets.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID }}
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
         run: |
-          ssh -i ~/.ssh/id_rsa user@167.179.72.25 << 'ENDSSH'
+          ssh -i ~/.ssh/id_rsa root@167.179.72.25 << 'ENDSSH'
             cd /var/www/nanyaru/source
             
             # Tạo file .env trên server

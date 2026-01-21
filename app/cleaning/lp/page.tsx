@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
+  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz' // Add your LINE URL here
 
   return (
     <>

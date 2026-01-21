@@ -65,8 +65,21 @@ async function sendImagesToLine(images: string[]) {
 }
 
 export async function POST(request: NextRequest) {
+  console.log('=== LINE NOTIFY API START ===')
+
   try {
+    // Log environment variables (masked)
+    console.log('Environment check:', {
+      hasAccessToken: !!config.channelAccessToken,
+      hasSecret: !!config.channelSecret,
+      hasGroupId: !!groupId,
+      hasImgbbKey: !!imgbbApiKey,
+      tokenLength: config.channelAccessToken?.length,
+      groupIdLength: groupId?.length,
+    })
+
     const formData = await request.formData()
+    console.log('FormData received, keys:', Array.from(formData.keys()))
 
     const cleanName = (formData.get('cleanName') as string) || ''
     const cleanFurigana = (formData.get('cleanFurigana') as string) || ''
@@ -93,6 +106,11 @@ export async function POST(request: NextRequest) {
     const airConImages = formData.getAll('airConImages') as File[]
     const cleaningImages = formData.getAll('images') as File[]
 
+    console.log('Images count:', {
+      airCon: airConImages.length,
+      cleaning: cleaningImages.length,
+    })
+
     const message = `
 新規クリーニング予約が入りました。
 ○お名前：${cleanName}
@@ -113,6 +131,7 @@ export async function POST(request: NextRequest) {
 `
 
     if (!groupId) {
+      console.error('LINE group ID not configured')
       return NextResponse.json(
         { success: false, message: 'LINE group ID not configured' },
         { status: 400 },
@@ -120,47 +139,87 @@ export async function POST(request: NextRequest) {
     }
 
     // Send text message
-    await client.pushMessage({
-      to: groupId,
-      messages: [
-        {
-          type: 'textV2',
-          text: `{everyone}${message}`,
-          substitution: {
-            everyone: {
-              type: 'mention',
-              mentionee: {
-                type: 'all',
+    console.log('Sending text message to LINE...')
+    try {
+      await client.pushMessage({
+        to: groupId,
+        messages: [
+          {
+            type: 'textV2',
+            text: `{everyone}${message}`,
+            substitution: {
+              everyone: {
+                type: 'mention',
+                mentionee: {
+                  type: 'all',
+                },
               },
             },
           },
-        },
-      ],
-    })
+        ],
+      })
+      console.log('✓ Text message sent')
+    } catch (lineError: any) {
+      console.error('LINE text message error:', lineError?.message || lineError)
+      throw lineError
+    }
 
-    // Upload all images in parallel (MUCH FASTER!)
+    // Upload all images in parallel
+    console.log('Starting image uploads...')
     const [airConUrls, cleaningUrls] = await Promise.all([
-      Promise.all(airConImages.map((img) => uploadToImgbb(img))),
-      Promise.all(cleaningImages.map((img) => uploadToImgbb(img))),
+      Promise.all(
+        airConImages.map((img, idx) => {
+          console.log(`Uploading airCon image ${idx + 1}/${airConImages.length}`)
+          return uploadToImgbb(img)
+        }),
+      ),
+      Promise.all(
+        cleaningImages.map((img, idx) => {
+          console.log(`Uploading cleaning image ${idx + 1}/${cleaningImages.length}`)
+          return uploadToImgbb(img)
+        }),
+      ),
     ])
 
     // Filter out failed uploads
     const validAirConUrls = airConUrls.filter((url) => url !== null) as string[]
     const validCleaningUrls = cleaningUrls.filter((url) => url !== null) as string[]
 
+    console.log('Upload results:', {
+      airConSuccess: validAirConUrls.length,
+      airConFailed: airConImages.length - validAirConUrls.length,
+      cleaningSuccess: validCleaningUrls.length,
+      cleaningFailed: cleaningImages.length - validCleaningUrls.length,
+    })
+
     // Send images in batches
+    console.log('Sending images to LINE...')
     await Promise.all([sendImagesToLine(validAirConUrls), sendImagesToLine(validCleaningUrls)])
+    console.log('✓ Images sent to LINE')
 
     const totalSent = validAirConUrls.length + validCleaningUrls.length
     const totalFailed = airConImages.length + cleaningImages.length - totalSent
 
+    console.log('=== LINE NOTIFY API SUCCESS ===')
     return NextResponse.json({
       success: true,
       totalImages: totalSent,
       failed: totalFailed,
     })
-  } catch (error) {
-    console.error('Error sending LINE notification:', error)
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 })
+  } catch (error: any) {
+    console.error('=== LINE NOTIFY API ERROR ===')
+    console.error('Error details:', {
+      name: error?.name,
+      message: error?.message,
+      stack: error?.stack,
+    })
+    return NextResponse.json(
+      {
+        success: false,
+        message: error?.message || 'Internal Server Error',
+        error: error?.toString(),
+      },
+      { status: 500 },
+    )
   }
 }

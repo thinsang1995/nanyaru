@@ -10,9 +10,22 @@
     "deploy": "pm2 deploy ecosystem.config.js production update"
   },
   "dependencies": {
+    "@line/bot-sdk": "^10.5.0",
+    "@types/lodash": "^4.17.21",
+    "add": "^2.0.6",
+    "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
+    "googleapis": "^168.0.0",
+    "jp-zipcode-lookup": "^0.3.5",
+    "lodash": "^4.17.21",
     "next": "16.0.7",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-datepicker": "^9.1.0",
+    "react-dom": "19.2.0",
+    "react-hook-form": "^7.68.0",
+    "react-select": "^5.10.2",
+    "use-postal-jp": "^2.0.2",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

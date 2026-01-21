@@ -7,11 +7,7 @@ type IFormFieldBotTalkProps = {
   isDriver?: boolean
 }
 
-const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({
-  questionName,
-  children,
-  isDriver,
-}) => {
+const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({ questionName, children }) => {
   return (
     <div className='mt-6 flex flex-col justify-start'>
       {questionName.length > 0 && questionName[0] != '' && (
@@ -22,12 +18,10 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({
               alt='bot-image'
               width={100}
               height={100}
-              layout='responsive'
-              objectFit='contain'
             />
           </div>
           <div
-            className='relative w-fit bg-white border border-gray-200 py-4 px-4 ml-4 rounded-xl shadow-sm
+            className='relative w-fit content-center bg-white border border-gray-200 px-4 py-2 ml-4 rounded-xl shadow-sm
           before:absolute before:content-[""] before:top-4 before:-left-2.5 before:w-0 before:h-0 
           before:border-t-8 before:border-t-transparent before:border-b-8 before:border-b-transparent before:border-r-10 before:border-r-gray-200
           after:absolute after:content-[""] after:top-4 after:-left-2 after:w-0 after:h-0 

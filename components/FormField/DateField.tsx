@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useId } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, FieldError, useFormContext } from 'react-hook-form'
@@ -27,6 +27,7 @@ const DateField: React.FC<IDateFieldProps> = ({
 }) => {
   const { control } = useFormContext()
   const [minDate, setMinDate] = useState<Date | null>(null)
+  const inputId = useId()
 
   const isSunday = (date: Date) => {
     return date.getDay() !== 0
@@ -40,9 +41,9 @@ const DateField: React.FC<IDateFieldProps> = ({
   }, [])
 
   const baseClassName =
-    'block w-full p-3 text-black text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-200 bg-gray-50 hover:bg-white cursor-pointer'
+    'block w-full p-3 min-h-[44px] text-black text-base sm:text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 focus:outline-none transition-all duration-200 bg-gray-50 hover:bg-white cursor-pointer'
   const largeClassName =
-    'block w-full p-4 text-black text-lg border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-200 bg-gray-50 hover:bg-white cursor-pointer'
+    'block w-full p-4 min-h-[44px] text-black text-lg border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-400 focus:outline-none transition-all duration-200 bg-gray-50 hover:bg-white cursor-pointer'
 
   return (
     <Controller
@@ -55,7 +56,7 @@ const DateField: React.FC<IDateFieldProps> = ({
           <div className='flex flex-col w-full relative'>
             <DatePicker
               dateFormat={dateFormat}
-              id={name}
+              id={`${name}-${inputId}`}
               placeholderText={placeholder}
               selected={isValidDate ? selectedDate : null}
               onChange={(date: Date | null) => onChange(date)}
@@ -70,6 +71,7 @@ const DateField: React.FC<IDateFieldProps> = ({
                 e.preventDefault()
               }}
               disabledKeyboardNavigation
+              {...fieldRest}
             />
             <div className='absolute top-3 right-3 pointer-events-none'>
               <svg

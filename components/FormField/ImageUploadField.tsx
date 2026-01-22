@@ -42,7 +42,6 @@ const ImageUploadField: React.FC<IImageUploadFieldProps> = ({
       const existingFiles = Array.isArray(currentValue) ? currentValue : []
 
       // Compress new images
-      console.log('Compressing images...')
       const compressedFiles = await compressImages(newFiles, {
         maxSizeMB: 1, // Max 1MB per image
         maxWidthOrHeight: 1920, // Max 1920px dimension
@@ -73,7 +72,6 @@ const ImageUploadField: React.FC<IImageUploadFieldProps> = ({
         reader.readAsDataURL(file)
       })
     } catch (error) {
-      console.error('Image compression error:', error)
       alert('画像の圧縮中にエラーが発生しました。もう一度お試しください。')
     } finally {
       setIsCompressing(false)

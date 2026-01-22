@@ -156,18 +156,9 @@ const Register: React.FC<RegisterProps> = () => {
 
   const onSubmit = async (formData: CleaningFormInputs) => {
     setIsSending(true)
-    setErrorMsg('') // Clear previous errors
+    setErrorMsg('')
 
     try {
-      console.log('=== START SUBMIT ===')
-      console.log('Environment:', {
-        hasLineToken: !!process.env.NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN,
-        hasImgbbKey: !!process.env.IMGBB_API_KEY,
-        origin: window.location.origin,
-      })
-
-      // Save data to Spreadsheet
-      console.log('Saving to spreadsheet...')
       await transformResponse<{ data: CleaningFormInputs }>(
         axiosInstance.post('/api/spreadsheet/cleaning_register', {
           cleanName: formData.cleanName,
@@ -199,10 +190,8 @@ const Register: React.FC<RegisterProps> = () => {
           registerTime: dayjs().format('HH:mm:ss'),
         }),
       )
-      console.log('✓ Spreadsheet saved')
 
       // LINE Notify with images
-      console.log('Preparing LINE notification...')
       const lineFormData = new FormData()
       lineFormData.append('cleanName', formData.cleanName)
       lineFormData.append('cleanFurigana', formData.cleanFurigana)
@@ -237,51 +226,31 @@ const Register: React.FC<RegisterProps> = () => {
 
       // Append air conditioner number images
       if (formData.cleanAirConNumber && formData.cleanAirConNumber.length > 0) {
-        console.log('Air con images:', formData.cleanAirConNumber.length)
         formData.cleanAirConNumber.forEach((file, idx) => {
-          console.log(`  [${idx}] ${file.name} (${file.type}, ${file.size} bytes)`)
           lineFormData.append('airConImages', file)
         })
       }
 
       // Append cleaning spot images
       if (formData.cleanImages && formData.cleanImages.length > 0) {
-        console.log('Cleaning images:', formData.cleanImages.length)
         formData.cleanImages.forEach((file, idx) => {
-          console.log(`  [${idx}] ${file.name} (${file.type}, ${file.size} bytes)`)
           lineFormData.append('images', file)
         })
       }
 
-      console.log('Sending to LINE...')
       const lineResponse = await fetch('/api/cleaning_line_notify', {
         method: 'POST',
         body: lineFormData,
       })
 
-      console.log('LINE response status:', lineResponse.status)
-
       if (!lineResponse.ok) {
         const errorText = await lineResponse.text()
-        console.error('LINE API Error:', errorText)
         throw new Error(`LINE送信失敗: ${lineResponse.status} - ${errorText}`)
       }
 
-      const lineResult = await lineResponse.json()
-      console.log('LINE result:', lineResult)
-      console.log('✓ LINE notification sent')
-
-      console.log('=== SUBMIT SUCCESS ===')
       router.push(`/cleaning/cleaning-thankyou?ecaiad=${adsCode}`)
     } catch (e: any) {
-      console.error('=== SUBMIT ERROR ===', e)
-      console.error('Error name:', e?.name)
-      console.error('Error message:', e?.message)
-      console.error('Error stack:', e?.stack)
-
       handleAPIErrors(e)
-
-      // Show detailed error to user (temporary for debugging)
       setErrorMsg(`送信エラーが発生しました: ${e?.message || '不明なエラー'}`)
     } finally {
       setIsSending(false)

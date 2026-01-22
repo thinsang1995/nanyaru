@@ -10,13 +10,11 @@ const imgbbApiKey = process.env.IMGBB_API_KEY || ''
 
 const client = new messagingApi.MessagingApiClient(config)
 
-// Upload with size limit check
 async function uploadToImgbb(file: File): Promise<{ url: string | null; error?: string }> {
   try {
     // Check file size (imgbb limit is 32MB, but we set 5MB for safety)
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      console.warn(`File too large: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`)
       return { url: null, error: 'File too large' }
     }
 
@@ -47,16 +45,10 @@ async function uploadToImgbb(file: File): Promise<{ url: string | null; error?: 
 }
 
 // Batch send images to LINE
-async function sendImagesToLine(imageUrls: string[], label: string) {
+async function sendImagesToLine(imageUrls: string[]) {
   if (!groupId || imageUrls.length === 0) return
 
   try {
-    // Send label first
-    await client.pushMessage({
-      to: groupId,
-      messages: [{ type: 'text', text: `${label} ${imageUrls.length}枚` }],
-    })
-
     // Send up to 5 images per request (LINE API limit)
     const chunks = []
     for (let i = 0; i < imageUrls.length; i += 5) {
@@ -117,18 +109,6 @@ export async function POST(request: NextRequest) {
     const airConImages = formData.getAll('airConImages') as File[]
     const cleaningImages = formData.getAll('images') as File[]
 
-    console.log('=== LINE NOTIFY START ===')
-    console.log('AirCon images:', airConImages.length)
-    console.log('Cleaning images:', cleaningImages.length)
-
-    // Log file sizes
-    airConImages.forEach((file, idx) => {
-      console.log(`  AirCon[${idx}]: ${file.name} - ${(file.size / 1024).toFixed(1)}KB`)
-    })
-    cleaningImages.forEach((file, idx) => {
-      console.log(`  Cleaning[${idx}]: ${file.name} - ${(file.size / 1024).toFixed(1)}KB`)
-    })
-
     const message = `
 新規クリーニング予約が入りました。
 ○お名前：${cleanName}
@@ -155,8 +135,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Send text message
-    console.log('Sending text message...')
     await client.pushMessage({
       to: groupId,
       messages: [
@@ -174,18 +152,11 @@ export async function POST(request: NextRequest) {
         },
       ],
     })
-    console.log('✓ Text message sent')
-
-    // Upload all images in parallel (MUCH FASTER!)
-    console.log('Uploading images to imgbb...')
-    const uploadStart = Date.now()
 
     const [airConResults, cleaningResults] = await Promise.all([
       Promise.all(airConImages.map((img) => uploadToImgbb(img))),
       Promise.all(cleaningImages.map((img) => uploadToImgbb(img))),
     ])
-
-    console.log(`✓ Upload completed in ${Date.now() - uploadStart}ms`)
 
     // Filter successful uploads
     const airConUrls = airConResults.filter((r) => r.url).map((r) => r.url!)
@@ -198,25 +169,13 @@ export async function POST(request: NextRequest) {
       console.warn(`${failedUploads} images failed to upload`)
     }
 
-    // Send images in batches
-    console.log('Sending images to LINE...')
     await Promise.all([
-      airConUrls.length > 0
-        ? sendImagesToLine(airConUrls, '【エアコン型番の写真】')
-        : Promise.resolve(),
-      cleaningUrls.length > 0
-        ? sendImagesToLine(cleaningUrls, '【掃除箇所の写真】')
-        : Promise.resolve(),
+      airConUrls.length > 0 ? sendImagesToLine(airConUrls) : Promise.resolve(),
+      cleaningUrls.length > 0 ? sendImagesToLine(cleaningUrls) : Promise.resolve(),
     ])
-    console.log('✓ Images sent to LINE')
 
     const totalTime = Date.now() - startTime
     const totalSent = airConUrls.length + cleaningUrls.length
-    const totalImages = airConImages.length + cleaningImages.length
-
-    console.log('=== LINE NOTIFY COMPLETE ===')
-    console.log(`Total time: ${totalTime}ms`)
-    console.log(`Images sent: ${totalSent}/${totalImages}`)
 
     return NextResponse.json({
       success: true,
@@ -225,11 +184,6 @@ export async function POST(request: NextRequest) {
       processingTime: totalTime,
     })
   } catch (error) {
-    const totalTime = Date.now() - startTime
-    console.error('=== LINE NOTIFY ERROR ===')
-    console.error('Error:', error)
-    console.error(`Failed after ${totalTime}ms`)
-
     return NextResponse.json(
       {
         success: false,

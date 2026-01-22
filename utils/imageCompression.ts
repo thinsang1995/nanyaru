@@ -79,13 +79,6 @@ export async function compressImage(file: File, options: CompressionOptions = {}
                 lastModified: Date.now(),
               })
 
-              console.log(`Compressed: ${file.name}`)
-              console.log(`  Original: ${(file.size / 1024).toFixed(0)}KB`)
-              console.log(`  Compressed: ${(compressedFile.size / 1024).toFixed(0)}KB`)
-              console.log(
-                `  Reduction: ${((1 - compressedFile.size / file.size) * 100).toFixed(1)}%`,
-              )
-
               resolve(compressedFile)
             }
           },

@@ -16,7 +16,6 @@ import MultiSelectField from '../../../components/FormField/MultiSelectField'
 import DateField from '../../../components/FormField/DateField'
 import TextareaField from '../../../components/FormField/TextareaField'
 import ImageUploadField from '../../../components/FormField/ImageUploadField'
-import OrderField from '../../../components/FormField/OrderField'
 
 export type CleaningFormInputs = {
   cleanName: string
@@ -114,7 +113,6 @@ const Register: React.FC<RegisterProps> = () => {
 
   const {
     handleSubmit,
-    watch,
     formState: { errors, isValid },
     setValue,
   } = methods

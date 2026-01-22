@@ -10,8 +10,16 @@ const imgbbApiKey = process.env.IMGBB_API_KEY || ''
 
 const client = new messagingApi.MessagingApiClient(config)
 
-async function uploadToImgbb(file: File): Promise<string | null> {
+// Upload with size limit check
+async function uploadToImgbb(file: File): Promise<{ url: string | null; error?: string }> {
   try {
+    // Check file size (imgbb limit is 32MB, but we set 5MB for safety)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      console.warn(`File too large: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`)
+      return { url: null, error: 'File too large' }
+    }
+
     const arrayBuffer = await file.arrayBuffer()
     const base64 = Buffer.from(arrayBuffer).toString('base64')
 
@@ -26,60 +34,63 @@ async function uploadToImgbb(file: File): Promise<string | null> {
 
     if (response.ok) {
       const data = await response.json()
-      return data.data?.url || null
+      return { url: data.data?.url || null }
     }
-    return null
+
+    const errorText = await response.text()
+    console.error('imgbb upload failed:', errorText)
+    return { url: null, error: errorText }
   } catch (error) {
     console.error('Error uploading to imgbb:', error)
-    return null
+    return { url: null, error: String(error) }
   }
 }
 
 // Batch send images to LINE
-async function sendImagesToLine(images: string[]) {
-  if (!groupId || images.length === 0) return
+async function sendImagesToLine(imageUrls: string[], label: string) {
+  if (!groupId || imageUrls.length === 0) return
 
-  // Send up to 5 images per request (LINE API limit)
-  const chunks = []
-  for (let i = 0; i < images.length; i += 5) {
-    chunks.push(images.slice(i, i + 5))
-  }
-
-  for (const chunk of chunks) {
-    const messages = chunk.map((url) => ({
-      type: 'image' as const,
-      originalContentUrl: url,
-      previewImageUrl: url,
-    }))
-
+  try {
+    // Send label first
     await client.pushMessage({
       to: groupId,
-      messages,
+      messages: [{ type: 'text', text: `${label} ${imageUrls.length}枚` }],
     })
 
-    // Small delay between batches
-    if (chunks.length > 1) {
-      await new Promise((resolve) => setTimeout(resolve, 200))
+    // Send up to 5 images per request (LINE API limit)
+    const chunks = []
+    for (let i = 0; i < imageUrls.length; i += 5) {
+      chunks.push(imageUrls.slice(i, i + 5))
     }
+
+    for (const chunk of chunks) {
+      const messages = chunk.map((url) => ({
+        type: 'image' as const,
+        originalContentUrl: url,
+        previewImageUrl: url,
+      }))
+
+      await client.pushMessage({
+        to: groupId,
+        messages,
+      })
+
+      // Small delay between batches to avoid rate limiting
+      if (chunks.length > 1) {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+      }
+    }
+  } catch (error) {
+    console.error('Error sending images to LINE:', error)
+    throw error
   }
 }
 
 export async function POST(request: NextRequest) {
-  console.log('=== LINE NOTIFY API START ===')
+  const startTime = Date.now()
 
   try {
-    // Log environment variables (masked)
-    console.log('Environment check:', {
-      hasAccessToken: !!config.channelAccessToken,
-      hasSecret: !!config.channelSecret,
-      hasGroupId: !!groupId,
-      hasImgbbKey: !!imgbbApiKey,
-      tokenLength: config.channelAccessToken?.length,
-      groupIdLength: groupId?.length,
-    })
-
     const formData = await request.formData()
-    console.log('FormData received, keys:', Array.from(formData.keys()))
 
     const cleanName = (formData.get('cleanName') as string) || ''
     const cleanFurigana = (formData.get('cleanFurigana') as string) || ''
@@ -106,9 +117,16 @@ export async function POST(request: NextRequest) {
     const airConImages = formData.getAll('airConImages') as File[]
     const cleaningImages = formData.getAll('images') as File[]
 
-    console.log('Images count:', {
-      airCon: airConImages.length,
-      cleaning: cleaningImages.length,
+    console.log('=== LINE NOTIFY START ===')
+    console.log('AirCon images:', airConImages.length)
+    console.log('Cleaning images:', cleaningImages.length)
+
+    // Log file sizes
+    airConImages.forEach((file, idx) => {
+      console.log(`  AirCon[${idx}]: ${file.name} - ${(file.size / 1024).toFixed(1)}KB`)
+    })
+    cleaningImages.forEach((file, idx) => {
+      console.log(`  Cleaning[${idx}]: ${file.name} - ${(file.size / 1024).toFixed(1)}KB`)
     })
 
     const message = `
@@ -131,7 +149,6 @@ export async function POST(request: NextRequest) {
 `
 
     if (!groupId) {
-      console.error('LINE group ID not configured')
       return NextResponse.json(
         { success: false, message: 'LINE group ID not configured' },
         { status: 400 },
@@ -139,85 +156,85 @@ export async function POST(request: NextRequest) {
     }
 
     // Send text message
-    console.log('Sending text message to LINE...')
-    try {
-      await client.pushMessage({
-        to: groupId,
-        messages: [
-          {
-            type: 'textV2',
-            text: `{everyone}${message}`,
-            substitution: {
-              everyone: {
-                type: 'mention',
-                mentionee: {
-                  type: 'all',
-                },
+    console.log('Sending text message...')
+    await client.pushMessage({
+      to: groupId,
+      messages: [
+        {
+          type: 'textV2',
+          text: `{everyone}${message}`,
+          substitution: {
+            everyone: {
+              type: 'mention',
+              mentionee: {
+                type: 'all',
               },
             },
           },
-        ],
-      })
-      console.log('✓ Text message sent')
-    } catch (lineError: any) {
-      console.error('LINE text message error:', lineError?.message || lineError)
-      throw lineError
-    }
+        },
+      ],
+    })
+    console.log('✓ Text message sent')
 
-    // Upload all images in parallel
-    console.log('Starting image uploads...')
-    const [airConUrls, cleaningUrls] = await Promise.all([
-      Promise.all(
-        airConImages.map((img, idx) => {
-          console.log(`Uploading airCon image ${idx + 1}/${airConImages.length}`)
-          return uploadToImgbb(img)
-        }),
-      ),
-      Promise.all(
-        cleaningImages.map((img, idx) => {
-          console.log(`Uploading cleaning image ${idx + 1}/${cleaningImages.length}`)
-          return uploadToImgbb(img)
-        }),
-      ),
+    // Upload all images in parallel (MUCH FASTER!)
+    console.log('Uploading images to imgbb...')
+    const uploadStart = Date.now()
+
+    const [airConResults, cleaningResults] = await Promise.all([
+      Promise.all(airConImages.map((img) => uploadToImgbb(img))),
+      Promise.all(cleaningImages.map((img) => uploadToImgbb(img))),
     ])
 
-    // Filter out failed uploads
-    const validAirConUrls = airConUrls.filter((url) => url !== null) as string[]
-    const validCleaningUrls = cleaningUrls.filter((url) => url !== null) as string[]
+    console.log(`✓ Upload completed in ${Date.now() - uploadStart}ms`)
 
-    console.log('Upload results:', {
-      airConSuccess: validAirConUrls.length,
-      airConFailed: airConImages.length - validAirConUrls.length,
-      cleaningSuccess: validCleaningUrls.length,
-      cleaningFailed: cleaningImages.length - validCleaningUrls.length,
-    })
+    // Filter successful uploads
+    const airConUrls = airConResults.filter((r) => r.url).map((r) => r.url!)
+    const cleaningUrls = cleaningResults.filter((r) => r.url).map((r) => r.url!)
+
+    const failedUploads =
+      airConResults.filter((r) => !r.url).length + cleaningResults.filter((r) => !r.url).length
+
+    if (failedUploads > 0) {
+      console.warn(`${failedUploads} images failed to upload`)
+    }
 
     // Send images in batches
     console.log('Sending images to LINE...')
-    await Promise.all([sendImagesToLine(validAirConUrls), sendImagesToLine(validCleaningUrls)])
+    await Promise.all([
+      airConUrls.length > 0
+        ? sendImagesToLine(airConUrls, '【エアコン型番の写真】')
+        : Promise.resolve(),
+      cleaningUrls.length > 0
+        ? sendImagesToLine(cleaningUrls, '【掃除箇所の写真】')
+        : Promise.resolve(),
+    ])
     console.log('✓ Images sent to LINE')
 
-    const totalSent = validAirConUrls.length + validCleaningUrls.length
-    const totalFailed = airConImages.length + cleaningImages.length - totalSent
+    const totalTime = Date.now() - startTime
+    const totalSent = airConUrls.length + cleaningUrls.length
+    const totalImages = airConImages.length + cleaningImages.length
 
-    console.log('=== LINE NOTIFY API SUCCESS ===')
+    console.log('=== LINE NOTIFY COMPLETE ===')
+    console.log(`Total time: ${totalTime}ms`)
+    console.log(`Images sent: ${totalSent}/${totalImages}`)
+
     return NextResponse.json({
       success: true,
       totalImages: totalSent,
-      failed: totalFailed,
+      failed: failedUploads,
+      processingTime: totalTime,
     })
-  } catch (error: any) {
-    console.error('=== LINE NOTIFY API ERROR ===')
-    console.error('Error details:', {
-      name: error?.name,
-      message: error?.message,
-      stack: error?.stack,
-    })
+  } catch (error) {
+    const totalTime = Date.now() - startTime
+    console.error('=== LINE NOTIFY ERROR ===')
+    console.error('Error:', error)
+    console.error(`Failed after ${totalTime}ms`)
+
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || 'Internal Server Error',
-        error: error?.toString(),
+        message: 'Internal Server Error',
+        error: String(error),
       },
       { status: 500 },
     )

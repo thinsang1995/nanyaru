@@ -7,38 +7,16 @@ export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState<'fixed' | 'absolute'>('fixed')
   const [bottom, setBottom] = useState('0px')
-  const lineUrl = '' // Add your LINE URL here
+  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
 
   useEffect(() => {
-    // Hide float initially
-    const floatElement = document.getElementById('float')
-    if (floatElement) {
-      floatElement.style.display = 'none'
-    }
-
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const floatEl = document.getElementById('float')
 
-      if (!floatEl) return
-
-      // Show/hide with fade animation
+      // Show/hide based on scroll position
       if (scrollTop > 300) {
-        if (floatEl.style.display === 'none') {
-          floatEl.style.display = 'block'
-          // Trigger fade in
-          setTimeout(() => {
-            floatEl.style.opacity = '1'
-          }, 10)
-        }
         setIsVisible(true)
       } else {
-        floatEl.style.opacity = '0'
-        setTimeout(() => {
-          if (window.pageYOffset <= 300) {
-            floatEl.style.display = 'none'
-          }
-        }, 500)
         setIsVisible(false)
       }
 
@@ -72,7 +50,8 @@ export default function FloatingCTA() {
       style={{
         position: position,
         bottom: bottom,
-        opacity: 0,
+        opacity: isVisible ? 1 : 0,
+        display: isVisible ? 'block' : 'none',
         transition: 'opacity 0.5s ease-in-out',
       }}
     >

@@ -12,7 +12,7 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({ questionName, chil
     <div className='mt-6 flex flex-col justify-start'>
       {questionName.length > 0 && questionName[0] != '' && (
         <div className='flex justify-between w-full'>
-          <div className='mt-2 overflow-hidden relative w-10 h-10 bg-linear-to-br from-green-400 to-green-500 rounded-full shadow-md shrink-0'>
+          <div className='mt-2 overflow-hidden relative w-10 h-10 bg-linear-to-br from-white-400 to-white-500 rounded-full shadow-md shrink-0'>
             <Image
               src='/images/cleaning/register_bot.png'
               alt='bot-image'

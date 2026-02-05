@@ -51,8 +51,9 @@ export default function FloatingCTA() {
         position: position,
         bottom: bottom,
         opacity: isVisible ? 1 : 0,
-        display: isVisible ? 'block' : 'none',
-        transition: 'opacity 0.5s ease-in-out',
+        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+        transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+        pointerEvents: isVisible ? 'auto' : 'none',
       }}
     >
       <div className='inner'>

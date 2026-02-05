@@ -160,27 +160,22 @@ export default function Home() {
                 <br />
                 エアコン丸ごと洗浄
               </h3>
+              <p className='cp_ttl3 cp_txt3 cp_txt_white'>
+                ペットやお子様
+                <br />
+                がいても安心
+              </p>
               <div className='th_pr_area'>
-                <Image src='/images/cha_1.webp' className='cha_1' alt='' width={200} height={200} />
-                <div className='nomal_pr'>
-                  <p>
-                    通常価格
+                <div className='th_pr_inner'>
+                  <Image src='/images/cha_1.webp' className='cha_1' alt='' width={200} height={200} />
+                  <p className='cp_pr fc_red cp_ttl3'>
+                    <span className='price_txt1'>地域最安値</span>
                     <br />
-                    <span className='ll'>17,800</span>円(税込)
+                    <span className='price_txt2'>
+                      <span className='price_txt2_main'>挑戦中</span>!
+                    </span>
                   </p>
-                  <Image
-                    src='/images/label_off.webp'
-                    className='label_off'
-                    alt='21%OFF'
-                    width={100}
-                    height={100}
-                  />
                 </div>
-                <p className='cp_pr fc_red cp_ttl3'>
-                  今だけ感謝価格
-                  <br />
-                  <span className='ll'>14,000</span>円(税込)
-                </p>
                 <p className='cp_ttl3 cp_txt3'>60~90分でサッと終わるプロの分解清掃</p>
               </div>
               {/* <div className='credit'>

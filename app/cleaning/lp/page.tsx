@@ -954,7 +954,7 @@ export default function Home() {
                   <p>
                     時間：30分
                     <br />
-                    料金：8,000円~
+                    料金：5,000円~
                   </p>
                 </li>
                 <li>

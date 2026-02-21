@@ -135,7 +135,7 @@ const Register: React.FC<RegisterProps> = () => {
       setValue('cleanName', nameParams)
       setValue('cleanPhoneNumber', phoneParams)
     }
-  }, [nameParams, phoneParams])
+  }, [nameParams, phoneParams, setValue])
 
   const getExperienceLabel = (experienceValue: string) => {
     const foundItem = usingItems.find((item) => item.value === experienceValue)
@@ -143,7 +143,7 @@ const Register: React.FC<RegisterProps> = () => {
   }
 
   // Convert multi-select array to comma-separated string
-  const getMultiSelectString = (value: any): string => {
+  const getMultiSelectString = (value: string | { label?: string; value?: string }[] | unknown): string => {
     if (!value) return ''
     if (typeof value === 'string') return value
     if (Array.isArray(value)) {
@@ -226,14 +226,14 @@ const Register: React.FC<RegisterProps> = () => {
 
       // Append air conditioner number images
       if (formData.cleanAirConNumber && formData.cleanAirConNumber.length > 0) {
-        formData.cleanAirConNumber.forEach((file, idx) => {
+        formData.cleanAirConNumber.forEach((file) => {
           lineFormData.append('airConImages', file)
         })
       }
 
       // Append cleaning spot images
       if (formData.cleanImages && formData.cleanImages.length > 0) {
-        formData.cleanImages.forEach((file, idx) => {
+        formData.cleanImages.forEach((file) => {
           lineFormData.append('images', file)
         })
       }
@@ -249,9 +249,9 @@ const Register: React.FC<RegisterProps> = () => {
       }
 
       router.push(`/cleaning/cleaning-thankyou?ecaiad=${adsCode}`)
-    } catch (e: any) {
+    } catch (e: unknown) {
       handleAPIErrors(e)
-      setErrorMsg(`送信エラーが発生しました: ${e?.message || '不明なエラー'}`)
+      setErrorMsg(`送信エラーが発生しました: ${e instanceof Error ? e.message : '不明なエラー'}`)
     } finally {
       setIsSending(false)
     }
@@ -280,9 +280,9 @@ const Register: React.FC<RegisterProps> = () => {
           <FormProvider {...methods}>
             <form
               className='w-full bg-white rounded-lg shadow-sm p-2 mt-2 mb-4'
-              onSubmit={(e: any) => e.preventDefault()}
+              onSubmit={(e: React.FormEvent) => e.preventDefault()}
             >
-              {orderFields.map((key, index) => {
+              {orderFields.map((key) => {
                 const value = fieldMap[key]
                 const inputType = fieldMap[key].inputType || 'text'
                 const rules = fieldMap[key].rules

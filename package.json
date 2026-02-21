@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_OPTIONS='--max_old_space_size=4096' next build",
+    "build": "rm -rf .next && NODE_OPTIONS='--max_old_space_size=4096' next build",
     "start": "next start",
     "lint": "eslint",
     "deploy": "pm2 deploy ecosystem.config.js production update"
@@ -32,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",

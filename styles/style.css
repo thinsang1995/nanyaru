@@ -174,7 +174,6 @@ a {
 }
 
 a:hover {
-	
 }
 /*--------------------------------------
   全体定義
@@ -261,10 +260,15 @@ body {
     margin: 0 auto;
     width: 52%;
 }
+.fv_h3 {
+    margin: 0 -3%;
+    padding: 0;
+}
 .fv_yen {
     display: block;
-    margin: 0 auto;
-    width: 92%;
+    margin: -2% 1% 0;
+    text-align: center;
+    width: 98%;
 }
 .cta_ttl_fv {
     background: #fff;
@@ -278,17 +282,17 @@ body {
 }
 .fv_cta {
 	width: 80%;
-    margin: 7px auto 0;
+    margin: 65px auto 0;
     text-align: center;
     position: relative;
-    padding-top: 24%;
+    padding-top: 22%;
 }
 
 .fv_bike1 {
     position: absolute;
-    left: -2%;
-    top: 73%;
-    width: 50%;
+    left: 0%;
+    top: 88%;
+    width: 100%;
 }
 .fv_ye_line {
     position: absolute;
@@ -1956,7 +1960,6 @@ ul.review h3 {
 }	
 	
 }
-
 
 
 

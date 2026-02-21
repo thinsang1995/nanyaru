@@ -37,6 +37,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz' // Add your LINE URL here
+  const v = '20260221' // cache bust version - update this date when images change
 
   return (
     <>
@@ -68,7 +69,7 @@ export default function Home() {
             <div className='fv_inner'>
               <h1 className='fv_h1'>
                 <Image
-                  src='/images/fv_cp.webp'
+                  src={`/images/fv_cp.webp?v=${v}`}
                   className='fv_cp'
                   alt='無添加洗剤で安心×業界NO1のコスパ'
                   width={800}
@@ -78,7 +79,7 @@ export default function Home() {
               </h1>
               <h2 className='fv_h2'>
                 <Image
-                  src='/images/fv_logo.webp'
+                  src={`/images/fv_logo.webp?v=${v}`}
                   className='fv_logo'
                   alt='エアコンクリーニングはなんやるにお任せ！'
                   width={600}
@@ -88,7 +89,7 @@ export default function Home() {
               </h2>
               <h3 className='fv_h3'>
                 <Image
-                  src='/images/fv_yen.webp'
+                  src={`/images/fv_yen_03.png?v=${v}`}
                   className='fv_yen'
                   alt='LINEで即日お見積り0円'
                   width={500}
@@ -97,7 +98,7 @@ export default function Home() {
                 />
               </h3>
               <Image
-                src='/images/bike1.webp'
+                src={`/images/fv_yen_04.png?v=${v}`}
                 className='fv_bike1'
                 alt=''
                 width={400}
@@ -106,18 +107,18 @@ export default function Home() {
               />
             </div>
             <div className='fv_cta'>
-              <Image
-                src='/images/fv_ye_line.webp'
+              {/* <Image
+                src={`/images/fv_ye_line.webp?v=${v}`}
                 className='fv_ye_line'
                 alt=''
                 width={300}
                 height={100}
-              />
-              <p className='fv_line_txt'>
+              /> */}
+              {/* <p className='fv_line_txt'>
                 LINEで24時間
                 <br />
                 即日対応!
-              </p>
+              </p> */}
               {/* <p className='cta_txt'>
                 <span className='slash'>500円クーポン配布中!</span>
               </p> */}
@@ -129,7 +130,7 @@ export default function Home() {
                   rel='noopener noreferrer'
                 >
                   <Image
-                    src='/images/ico_line.webp'
+                    src={`/images/ico_line.webp?v=${v}`}
                     className='ico_line'
                     alt='LINE'
                     width={40}
@@ -146,7 +147,7 @@ export default function Home() {
             <div className='inner'>
               <h2 className='th_ttl'>
                 <Image
-                  src='/images/ttl_ribbon_red.webp'
+                  src={`/images/ttl_ribbon_red.webp?v=${v}`}
                   className='ttl_ribbon_red'
                   alt='お客様感謝キャンペーン実施中！'
                   width={600}
@@ -167,7 +168,7 @@ export default function Home() {
               </p>
               <div className='th_pr_area'>
                 <div className='th_pr_inner'>
-                  <Image src='/images/cha_1.webp' className='cha_1' alt='' width={200} height={200} />
+                  <Image src={`/images/cha_1.webp?v=${v}`} className='cha_1' alt='' width={200} height={200} />
                   <p className='cp_pr fc_red cp_ttl3'>
                     <span className='price_txt1'>地域最安値</span>
                     <br />
@@ -182,7 +183,7 @@ export default function Home() {
                 <h4>各種クレジットカード対応</h4>
                 <p>
                   <Image
-                    src='/images/credit.webp'
+                    src={`/images/credit.webp?v=${v}`}
                     className='creditcard'
                     alt=''
                     width={500}
@@ -197,7 +198,7 @@ export default function Home() {
           <section className='contents_block bg02' id='recommend'>
             <div className='inner'>
               <Image
-                src='/images/fukidashi_yellow.webp'
+                src={`/images/fukidashi_yellow.webp?v=${v}`}
                 className='fukidashi_yellow'
                 alt=''
                 width={150}
@@ -239,7 +240,7 @@ export default function Home() {
               <div className='box_white'>
                 <h3 className='ttl_ribbon_blue'>
                   <Image
-                    src='/images/ttl_ribbon_blue.webp'
+                    src={`/images/ttl_ribbon_blue.webp?v=${v}`}
                     className='ttl_ribbon_b'
                     alt='大手メディアでも多数紹介！'
                     width={600}
@@ -260,15 +261,15 @@ export default function Home() {
                   <span className='marker_yellow'>雑誌でも高評価！</span>
                 </p>
                 <Image
-                  src='/images/trophy.webp'
+                  src={`/images/trophy.webp?v=${v}`}
                   className='trophy'
                   alt=''
                   width={300}
                   height={300}
                 />
-                <Image src='/images/award.webp' className='award' alt='' width={600} height={250} />
+                <Image src={`/images/award.webp?v=${v}`} className='award' alt='' width={600} height={250} />
               </div>
-              <Image src='/images/item.webp' className='item' alt='洗剤' width={300} height={300} />
+              <Image src={`/images/item.webp?v=${v}`} className='item' alt='洗剤' width={300} height={300} />
             </div>
           </section>
 
@@ -277,7 +278,7 @@ export default function Home() {
             <div className='inner'>
               <div className='exp'>
                 <Image
-                  src='/images/exp_img1.webp'
+                  src={`/images/exp_img1.webp?v=${v}`}
                   className='exp_img1'
                   alt=''
                   width={700}
@@ -302,7 +303,7 @@ export default function Home() {
               </h2>
               <div className='why_box'>
                 <Image
-                  src='/images/fukidashi_yellow.webp'
+                  src={`/images/fukidashi_yellow.webp?v=${v}`}
                   className='fukidashi_yellow'
                   alt=''
                   width={150}
@@ -312,7 +313,7 @@ export default function Home() {
                 <ul className='why_list'>
                   <li>
                     <Image
-                      src='/images/merit1.webp'
+                      src={`/images/merit1.webp?v=${v}`}
                       className='merit'
                       alt=''
                       width={200}
@@ -326,7 +327,7 @@ export default function Home() {
                   </li>
                   <li>
                     <Image
-                      src='/images/merit2.webp'
+                      src={`/images/merit2.webp?v=${v}`}
                       className='merit'
                       alt=''
                       width={200}
@@ -342,7 +343,7 @@ export default function Home() {
                   </li>
                   <li>
                     <Image
-                      src='/images/merit3.webp'
+                      src={`/images/merit3.webp?v=${v}`}
                       className='merit'
                       alt=''
                       width={200}
@@ -366,7 +367,7 @@ export default function Home() {
                   提供できるんです！
                 </p>
                 <Image
-                  src='/images/bike1.webp'
+                  src={`/images/bike1.webp?v=${v}`}
                   className='why_img'
                   alt=''
                   width={400}
@@ -395,14 +396,14 @@ export default function Home() {
                 <span className='marker_yellow b'>まずはお気軽にお問い合わせください｡</span>
               </p>
               <Image
-                src='/images/map.webp'
+                src={`/images/map.webp?v=${v}`}
                 className='map'
                 alt='東京･神奈川･埼玉･千葉'
                 width={600}
                 height={400}
               />
               <Image
-                src='/images/bike2.webp'
+                src={`/images/bike2.webp?v=${v}`}
                 className='area_img'
                 alt=''
                 width={400}
@@ -416,7 +417,7 @@ export default function Home() {
             <div className='inner'>
               <div className='cta_box'>
                 <Image
-                  src='/images/cta_cha.webp'
+                  src={`/images/cta_cha.webp?v=${v}`}
                   className='cta_cha'
                   alt=''
                   width={200}
@@ -434,7 +435,7 @@ export default function Home() {
                     rel='noopener noreferrer'
                   >
                     <Image
-                      src='/images/ico_line.webp'
+                      src={`/images/ico_line.webp?v=${v}`}
                       className='ico_line'
                       alt='LINE'
                       width={40}
@@ -480,8 +481,8 @@ export default function Home() {
                   <br />
                   まずはご相談ください。
                 </p>
-                <Image src='/images/cha_2.webp' className='cha_2' alt='' width={200} height={200} />
-                <Image src='/images/cha_3.webp' className='cha_3' alt='' width={200} height={200} />
+                <Image src={`/images/cha_2.webp?v=${v}`} className='cha_2' alt='' width={200} height={200} />
+                <Image src={`/images/cha_3.webp?v=${v}`} className='cha_3' alt='' width={200} height={200} />
               </div>
             </div>
           </section>
@@ -566,7 +567,7 @@ export default function Home() {
             <div className='inner'>
               <div className='cta_box'>
                 <Image
-                  src='/images/cta_cha.webp'
+                  src={`/images/cta_cha.webp?v=${v}`}
                   className='cta_cha'
                   alt=''
                   width={200}
@@ -584,7 +585,7 @@ export default function Home() {
                     rel='noopener noreferrer'
                   >
                     <Image
-                      src='/images/ico_line.webp'
+                      src={`/images/ico_line.webp?v=${v}`}
                       className='ico_line'
                       alt='LINE'
                       width={40}
@@ -615,7 +616,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow1.webp'
+                    src={`/images/flow1.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -638,7 +639,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow2.webp'
+                    src={`/images/flow2.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -661,7 +662,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow3.webp'
+                    src={`/images/flow3.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -684,7 +685,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow4.webp'
+                    src={`/images/flow4.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -707,7 +708,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow5.webp'
+                    src={`/images/flow5.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -730,7 +731,7 @@ export default function Home() {
                 </h3>
                 <div className='works_l'>
                   <Image
-                    src='/images/flow6.webp'
+                    src={`/images/flow6.webp?v=${v}`}
                     className='worksimg'
                     alt=''
                     width={400}
@@ -752,7 +753,7 @@ export default function Home() {
               <div className='ba_box'>
                 <div className='ba_l'>
                   <Image
-                    src='/images/before.webp'
+                    src={`/images/before.webp?v=${v}`}
                     className='ba_img'
                     alt='BEFORE'
                     width={300}
@@ -771,7 +772,7 @@ export default function Home() {
                 </div>
               </div>
               <Image
-                src='/images/arrow_red.webp'
+                src={`/images/arrow_red.webp?v=${v}`}
                 className='arrow_red'
                 alt=''
                 width={100}
@@ -780,7 +781,7 @@ export default function Home() {
               <div className='ba_box'>
                 <div className='ba_l'>
                   <Image
-                    src='/images/after.webp'
+                    src={`/images/after.webp?v=${v}`}
                     className='ba_img'
                     alt='AFTER'
                     width={300}
@@ -825,7 +826,7 @@ export default function Home() {
           <section className='contents_block bg03' id='review'>
             <div className='inner'>
               <Image
-                src='/images/fukidashi_yellow.webp'
+                src={`/images/fukidashi_yellow.webp?v=${v}`}
                 className='fukidashi_yellow'
                 alt=''
                 width={150}
@@ -836,7 +837,7 @@ export default function Home() {
                 <li>
                   <div className='rev_l'>
                     <Image
-                      src='/images/user1.webp'
+                      src={`/images/user1.webp?v=${v}`}
                       className='ico_user'
                       alt=''
                       width={80}
@@ -860,7 +861,7 @@ export default function Home() {
                 <li>
                   <div className='rev_l'>
                     <Image
-                      src='/images/user2.webp'
+                      src={`/images/user2.webp?v=${v}`}
                       className='ico_user'
                       alt=''
                       width={80}
@@ -884,7 +885,7 @@ export default function Home() {
                 <li>
                   <div className='rev_l'>
                     <Image
-                      src='/images/user3.webp'
+                      src={`/images/user3.webp?v=${v}`}
                       className='ico_user'
                       alt=''
                       width={80}
@@ -908,7 +909,7 @@ export default function Home() {
                 <li>
                   <div className='rev_l'>
                     <Image
-                      src='/images/user4.webp'
+                      src={`/images/user4.webp?v=${v}`}
                       className='ico_user'
                       alt=''
                       width={80}
@@ -944,7 +945,7 @@ export default function Home() {
               <ul className='pr_menu_list'>
                 <li>
                   <Image
-                    src='/images/price1.webp'
+                    src={`/images/price1.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -959,7 +960,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price2.webp'
+                    src={`/images/price2.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -974,7 +975,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price3.webp'
+                    src={`/images/price3.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -989,7 +990,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price4.webp'
+                    src={`/images/price4.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -1004,7 +1005,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price5.webp'
+                    src={`/images/price5.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -1019,7 +1020,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price6.webp'
+                    src={`/images/price6.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -1034,7 +1035,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price7.webp'
+                    src={`/images/price7.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -1049,7 +1050,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Image
-                    src='/images/price8.webp'
+                    src={`/images/price8.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
                     width={300}
@@ -1071,7 +1072,7 @@ export default function Home() {
             <div className='inner'>
               <h2 className='ttl_coupon'>
                 <Image
-                  src='/images/coupon_ttl.webp'
+                  src={`/images/coupon_ttl.webp?v=${v}`}
                   className='coupon_ttl'
                   alt='LINE限定クーポン'
                   width={600}
@@ -1080,7 +1081,7 @@ export default function Home() {
               </h2>
               <h3 className='coupon_h3'>LINE経由でお申し込みいただいた方限定</h3>
               <Image
-                src='/images/coupon.webp'
+                src={`/images/coupon.webp?v=${v}`}
                 className='coupon'
                 alt='LINE限定割引500円OFF'
                 width={500}
@@ -1094,7 +1095,7 @@ export default function Home() {
             <div className='inner'>
               <div className='cta_box'>
                 <Image
-                  src='/images/cta_cha.webp'
+                  src={`/images/cta_cha.webp?v=${v}`}
                   className='cta_cha'
                   alt=''
                   width={200}
@@ -1112,7 +1113,7 @@ export default function Home() {
                     rel='noopener noreferrer'
                   >
                     <Image
-                      src='/images/ico_line.webp'
+                      src={`/images/ico_line.webp?v=${v}`}
                       className='ico_line'
                       alt='LINE'
                       width={40}
@@ -1132,7 +1133,7 @@ export default function Home() {
               <div className='flow_top'>
                 <div style={{ position: 'relative', display: 'inline-block' }}>
                   <Image
-                    src='/images/fukidashi_yellow2.webp'
+                    src={`/images/fukidashi_yellow2.webp?v=${v}`}
                     className='fukidashi_yellow2'
                     alt=''
                     width={580}
@@ -1163,7 +1164,7 @@ export default function Home() {
                   <div className='flow_img'>
                     <span className='step'>STEP.1</span>
                     <Image
-                      src='/images/ico_f1.webp'
+                      src={`/images/ico_f1.webp?v=${v}`}
                       className='icon_flow'
                       alt=''
                       width={150}
@@ -1183,7 +1184,7 @@ export default function Home() {
                   <div className='flow_img'>
                     <span className='step'>STEP.2</span>
                     <Image
-                      src='/images/ico_f2.webp'
+                      src={`/images/ico_f2.webp?v=${v}`}
                       className='icon_flow'
                       alt=''
                       width={150}
@@ -1203,7 +1204,7 @@ export default function Home() {
                   <div className='flow_img'>
                     <span className='step'>STEP.3</span>
                     <Image
-                      src='/images/ico_f3.webp'
+                      src={`/images/ico_f3.webp?v=${v}`}
                       className='icon_flow'
                       alt=''
                       width={150}
@@ -1229,7 +1230,7 @@ export default function Home() {
             <div className='inner'>
               <div className='cta_box'>
                 <Image
-                  src='/images/cta_cha.webp'
+                  src={`/images/cta_cha.webp?v=${v}`}
                   className='cta_cha'
                   alt=''
                   width={200}
@@ -1247,7 +1248,7 @@ export default function Home() {
                     rel='noopener noreferrer'
                   >
                     <Image
-                      src='/images/ico_line.webp'
+                      src={`/images/ico_line.webp?v=${v}`}
                       className='ico_line'
                       alt='LINE'
                       width={40}
@@ -1263,7 +1264,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer id='footer'>
-          <p className='copy'>Copyright © 2024 リバEXP All Right Reserved.</p>
+          <p className='copy'>Copyright © 2026 リバEXP All Right Reserved.</p>
         </footer>
 
         {/* Floating CTA */}

@@ -5,9 +5,10 @@ type IFormFieldBotTalkProps = {
   questionName: string[]
   children?: React.ReactNode
   isDriver?: boolean
+  required?: boolean
 }
 
-const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({ questionName, children }) => {
+const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({ questionName, children, required }) => {
   return (
     <div className='mt-6 flex flex-col justify-start'>
       {questionName.length > 0 && questionName[0] != '' && (
@@ -29,7 +30,7 @@ const FormFieldBotTalk: React.FC<IFormFieldBotTalkProps> = ({ questionName, chil
           >
             {questionName.map((question) => (
               <Fragment key={question}>
-                <span className='text-gray-700 text-sm leading-relaxed'>{question}</span>
+                <span className='text-gray-700 text-sm leading-relaxed'>{question}{required && <span className='text-red-500 ml-0.5'>*</span>}</span>
                 <br />
               </Fragment>
             ))}

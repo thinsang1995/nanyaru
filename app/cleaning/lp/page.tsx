@@ -8,16 +8,7 @@ export const metadata: Metadata = {
   title: '最安値のエアコンクリーニングはなんやる｜夜間/休日OK・追加費なし',
   description:
     'エアコンクリーニング(エアコン清掃・エアコン掃除)はなんやる。見積もり通りで当日の追加費用なし。低刺激洗剤・防カビ仕上げ、夜間/休日も対応、LINEで予約可。',
-  icons: {
-    icon: [
-      { url: '/images/favicon.ico' },
-      { url: '/images/icon_16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/images/icon_32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/images/icon_48x48.png', sizes: '48x48', type: 'image/png' },
-    ],
-    apple: [{ url: '/images/icon_180x180.png', sizes: '180x180' }],
-  },
-  openGraph: {
+openGraph: {
     title: '最安値のエアコンクリーニングはなんやる｜夜間/休日OK・追加費なし',
     description:
       'エアコンクリーニング(エアコン清掃・エアコン掃除)はなんやる。見積もり通りで当日の追加費用なし。低刺激洗剤・防カビ仕上げ、夜間/休日も対応、LINEで予約可。',

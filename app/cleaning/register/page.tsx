@@ -427,7 +427,7 @@ const Register: React.FC<RegisterProps> = () => {
                 }
 
                 return (
-                  <FormField key={key} questionName={value.question} isDriver>
+                  <FormField key={key} questionName={value.question} isDriver required={!!rules?.required}>
                     {child}
                   </FormField>
                 )

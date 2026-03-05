@@ -33,6 +33,7 @@ const MultiSelectField: React.FC<IControlledSelectFieldProps> = ({
         <div className='w-full flex flex-col'>
           <Select
             closeMenuOnSelect={false}
+            instanceId={name}
             id={name}
             options={items}
             onChange={onChange}

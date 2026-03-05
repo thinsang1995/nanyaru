@@ -170,7 +170,12 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     inputType: 'text',
     question: ['住所を教えてください。'],
     placeholder: '例)〇〇区〇〇番地(マンション名)',
-    rules: {},
+    rules: {
+      required: {
+        value: true,
+        message: '住所を入力してください。',
+      },
+    },
   },
   cleanExperience: {
     items: usingItems,

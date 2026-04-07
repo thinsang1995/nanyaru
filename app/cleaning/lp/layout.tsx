@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import '../../globals.css'
 import '../../../styles/style.css'
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://nanyaru-domain.com'), // Update with actual domain
-}
+export const metadata: Metadata = {}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

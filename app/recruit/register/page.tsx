@@ -113,7 +113,6 @@ const Register: React.FC<RegisterProps> = () => {
 
   const {
     handleSubmit,
-    watch,
     formState: { errors, isValid },
     setValue,
   } = methods
@@ -136,7 +135,7 @@ const Register: React.FC<RegisterProps> = () => {
       setValue('cleanName', nameParams)
       setValue('cleanPhoneNumber', phoneParams)
     }
-  }, [nameParams, phoneParams])
+  }, [nameParams, phoneParams, setValue])
 
   const getExperienceLabel = (experienceValue: string) => {
     const foundItem = usingItems.find((item) => item.value === experienceValue)
@@ -144,7 +143,7 @@ const Register: React.FC<RegisterProps> = () => {
   }
 
   // Convert multi-select array to comma-separated string
-  const getMultiSelectString = (value: any): string => {
+  const getMultiSelectString = (value: string | string[] | { label?: string; value?: string }[] | null | undefined): string => {
     if (!value) return ''
     if (typeof value === 'string') return value
     if (Array.isArray(value)) {
@@ -276,9 +275,9 @@ const Register: React.FC<RegisterProps> = () => {
           <FormProvider {...methods}>
             <form
               className='w-full bg-white rounded-lg shadow-sm p-2 mt-2 mb-4'
-              onSubmit={(e: any) => e.preventDefault()}
+              onSubmit={(e: React.FormEvent) => e.preventDefault()}
             >
-              {orderFields.map((key, index) => {
+              {orderFields.map((key) => {
                 const value = fieldMap[key]
                 const inputType = fieldMap[key].inputType || 'text'
                 const rules = fieldMap[key].rules

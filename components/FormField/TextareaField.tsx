@@ -33,7 +33,7 @@ const TextareaField: React.FC<ITextareaFieldProps> = ({
 
   return (
     <Controller
-      render={({ field: { onChange, value, ...fieldRest }, formState, fieldState }) => {
+      render={({ field: { onChange, value, ...fieldRest } }) => {
         return (
           <div className='flex flex-col w-full'>
             <div className='w-full flex items-center gap-2 relative'>

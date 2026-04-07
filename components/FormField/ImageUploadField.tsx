@@ -71,7 +71,7 @@ const ImageUploadField: React.FC<IImageUploadFieldProps> = ({
         }
         reader.readAsDataURL(file)
       })
-    } catch (error) {
+    } catch {
       alert('画像の圧縮中にエラーが発生しました。もう一度お試しください。')
     } finally {
       setIsCompressing(false)
@@ -188,6 +188,7 @@ const ImageUploadField: React.FC<IImageUploadFieldProps> = ({
               <div className='mt-4 grid grid-cols-3 gap-3'>
                 {previews.map((preview, index) => (
                   <div key={index} className='relative group'>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preview}
                       alt={`Preview ${index + 1}`}

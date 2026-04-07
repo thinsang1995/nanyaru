@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense, useRef } from 'react'
 import dayjs from 'dayjs'
 import { FieldError, FormProvider, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Head from 'next/head'
 import fieldMap, { RegisterFieldKeys, usingItems } from '../../../constants/registerCleaning'
 import axiosInstance, { handleAPIErrors } from '../../../utils/axiosInstance'
 import transformResponse from '../../../utils/transformResponse'
@@ -261,10 +260,6 @@ const Register: React.FC<RegisterProps> = () => {
 
   return (
     <>
-      <Head>
-        <title>NANYARU-クリーニング予約フォーム</title>
-      </Head>
-
       {/* Header */}
       <div className='bg-linear-to-r from-green-400 to-green-500 py-6 px-4 shadow-md'>
         <div className='max-w-screen-sm mx-auto'>

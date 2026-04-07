@@ -61,7 +61,7 @@ const RadioField: React.FC<IRadioFieldProps> = ({
       control={control}
       rules={rules}
       name={name}
-      render={({ field: { onChange, ...fieldRest }, formState, fieldState }) => {
+      render={({ field: { onChange, ...fieldRest } }) => {
         return (
           <div className='w-full flex flex-col'>
             <ul className={`${gridCol ? getGridClassName() : flexColClassName} gap-2 w-full mt-2`}>

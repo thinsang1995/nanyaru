@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useId } from 'react'
+import React, { useMemo, useId } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, FieldError, useFormContext } from 'react-hook-form'
@@ -26,18 +26,17 @@ const DateField: React.FC<IDateFieldProps> = ({
   dateFormat,
 }) => {
   const { control } = useFormContext()
-  const [minDate, setMinDate] = useState<Date | null>(null)
   const inputId = useId()
 
   const isSunday = (date: Date) => {
     return date.getDay() !== 0
   }
 
-  useEffect(() => {
+  const minDate = useMemo(() => {
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
-    setMinDate(tomorrow)
+    return tomorrow
   }, [])
 
   const baseClassName =
@@ -47,7 +46,7 @@ const DateField: React.FC<IDateFieldProps> = ({
 
   return (
     <Controller
-      render={({ field: { onChange, value, ...fieldRest }, formState, fieldState }) => {
+      render={({ field: { onChange, value, ...fieldRest } }) => {
         // Ensure value is a valid Date object
         const selectedDate = value instanceof Date ? value : value ? new Date(value) : null
         const isValidDate = selectedDate && !isNaN(selectedDate.getTime())

@@ -55,7 +55,7 @@ export default function FAQ() {
         }
       }
     })
-  }, [])
+  }, [openItems])
 
   const toggleItem = (index: number) => {
     // Prevent multiple clicks during animation

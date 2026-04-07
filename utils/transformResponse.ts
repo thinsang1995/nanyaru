@@ -1,5 +1,5 @@
 import isObject from 'lodash/isObject'
-import { AxiosPromise } from 'axios'
+import { AxiosError, AxiosPromise } from 'axios'
 
 type ErrorResponse = {
   message: string
@@ -9,12 +9,15 @@ type ErrorResponse = {
 /**
  * Transforms any error from axios error into a Jupiter Response error
  */
-function transformApiError(e: any): ErrorResponse {
+function transformApiError(e: unknown): ErrorResponse {
   console.error(e)
-  const hasMessage = e?.response?.data?.message && typeof e.response.data.message === 'string'
-  const hasErrors = e?.response?.data?.errors && isObject(e.response.data.errors)
+  const axiosErr = e instanceof AxiosError ? e : null
+  const data = axiosErr?.response?.data
+  const hasMessage = data?.message && typeof data.message === 'string'
+  const hasErrors = data?.errors && isObject(data.errors)
+  const msg = e instanceof Error ? e.message : 'エラーが発生しました'
   const apiError: ErrorResponse =
-    hasMessage || hasErrors ? e?.response?.data : { message: e.message, errors: {} }
+    hasMessage || hasErrors ? data : { message: msg, errors: {} }
 
   return apiError
 }

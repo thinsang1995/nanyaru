@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import isObject from 'lodash/isObject'
 import { ErrorResponse } from '../typing/api'
 
@@ -26,13 +26,15 @@ instance.interceptors.response.use(
   },
 )
 
-export function handleAPIErrors(e: any, cb?: (err: ErrorResponse) => void): ErrorResponse {
+export function handleAPIErrors(e: unknown, cb?: (err: ErrorResponse) => void): ErrorResponse {
   console.error(e)
 
-  const hasMessage = e?.response?.data?.message && typeof e.response.data.message === 'string'
-  const hasErrors = e?.response?.data?.errors && isObject(e.response.data.errors)
+  const axiosErr = e instanceof AxiosError ? e : null
+  const data = axiosErr?.response?.data
+  const hasMessage = data?.message && typeof data.message === 'string'
+  const hasErrors = data?.errors && isObject(data.errors)
   const apiError: ErrorResponse =
-    hasMessage || hasErrors ? e?.response?.data : { message: 'エラーが発生しました', errors: {} }
+    hasMessage || hasErrors ? data : { message: 'エラーが発生しました', errors: {} }
   if (cb) cb(apiError)
 
   return apiError

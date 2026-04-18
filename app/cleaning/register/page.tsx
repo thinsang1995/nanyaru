@@ -5,8 +5,7 @@ import dayjs from 'dayjs'
 import { FieldError, FormProvider, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import fieldMap, { RegisterFieldKeys, usingItems } from '../../../constants/registerCleaning'
-import axiosInstance, { handleAPIErrors } from '../../../utils/axiosInstance'
-import transformResponse from '../../../utils/transformResponse'
+import { handleAPIErrors } from '../../../utils/axiosInstance'
 import FormField from '../../../components/FormField/FormField'
 import InputField from '../../../components/FormField/InputField'
 import RadioField from '../../../components/FormField/RadioField'
@@ -15,6 +14,38 @@ import MultiSelectField from '../../../components/FormField/MultiSelectField'
 import DateField from '../../../components/FormField/DateField'
 import TextareaField from '../../../components/FormField/TextareaField'
 import ImageUploadField from '../../../components/FormField/ImageUploadField'
+
+const CMS_API_URL = process.env.NEXT_PUBLIC_CLEANING_CMS_API_URL || ''
+
+type CmsAttachment = { key: string; fileName: string; fileSize: number; mimeType: string }
+
+async function uploadToCmsS3(file: File): Promise<CmsAttachment | null> {
+  if (!CMS_API_URL) return null
+  try {
+    const res = await fetch(`${CMS_API_URL}/api/upload/presigned-public`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        folder: 'booking-submissions',
+      }),
+    })
+    if (!res.ok) return null
+    const { data } = await res.json()
+    const { uploadUrl, key } = data
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+      headers: { 'Content-Type': file.type },
+    })
+    if (!uploadRes.ok) return null
+    return { key, fileName: file.name, fileSize: file.size, mimeType: file.type }
+  } catch {
+    return null
+  }
+}
 
 export type CleaningFormInputs = {
   cleanName: string
@@ -158,37 +189,53 @@ const Register: React.FC<RegisterProps> = () => {
     setErrorMsg('')
 
     try {
-      await transformResponse<{ data: CleaningFormInputs }>(
-        axiosInstance.post('/api/spreadsheet/cleaning_register', {
-          cleanName: formData.cleanName,
-          cleanFurigana: formData.cleanFurigana,
-          cleanPhoneNumber: formData.cleanPhoneNumber,
-          cleanExperience: getExperienceLabel(formData.cleanExperience),
-          cleanNumOfAirCon: formData.cleanNumOfAirCon,
-          cleanNumOfAirConOut: formData.cleanNumOfAirConOut,
-          cleanOtherRequest: formData.cleanOtherRequest,
-          cleanOtherMenu: getMultiSelectString(formData.cleanOtherMenu),
-          appointmentDayOne: formData.dayOne ? dayjs(formData.dayOne).format('YYYY年MM月DD日') : '',
-          startTimeOne: formData.startTimeOne || '指定なし',
-          endTimeOne: formData.endTimeOne || '指定なし',
-          appointmentDayTwo: formData.dayTwo
-            ? dayjs(formData.dayTwo).format('YYYY年MM月DD日')
-            : '指定なし',
-          startTimeTwo: formData.startTimeTwo || '指定なし',
-          endTimeTwo: formData.endTimeTwo || '指定なし',
-          appointmentDayThree: formData.dayThree
-            ? dayjs(formData.dayThree).format('YYYY年MM月DD日')
-            : '指定なし',
-          startTimeThree: formData.startTimeThree || '指定なし',
-          endTimeThree: formData.endTimeThree || '指定なし',
-          cleanAddress: formData.cleanAddress,
-          cleanBike: formData.cleanBike,
-          cleanOtherWarning: formData.cleanOtherWarning,
-          adsCode,
-          registerDate: dayjs().format('YYYY-MM-DD'),
-          registerTime: dayjs().format('HH:mm:ss'),
-        }),
-      )
+      // Send to Cleaning CMS (fire-and-forget)
+      if (CMS_API_URL) {
+        try {
+          const airConAttachments = (
+            await Promise.all((formData.cleanAirConNumber || []).map(uploadToCmsS3))
+          ).filter((r): r is CmsAttachment => r !== null)
+
+          const cleaningAttachments = (
+            await Promise.all((formData.cleanImages || []).map(uploadToCmsS3))
+          ).filter((r): r is CmsAttachment => r !== null)
+
+          await fetch(`${CMS_API_URL}/api/bookings/from-submission`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customerName: formData.cleanName,
+              customerPhone: formData.cleanPhoneNumber,
+              customerAddress: formData.cleanAddress || undefined,
+              customerFurigana: formData.cleanFurigana,
+              experience: getExperienceLabel(formData.cleanExperience),
+              numOfAirCon: formData.cleanNumOfAirCon,
+              numOfAirConOut: formData.cleanNumOfAirConOut,
+              airConModel: formData.cleanOtherRequest || undefined,
+              otherMenu: getMultiSelectString(formData.cleanOtherMenu),
+              hasBikeParking: formData.cleanBike,
+              submissionNotes: formData.cleanOtherWarning || undefined,
+              preferredDate: formData.dayOne || undefined,
+              preferredTimeSlot: formData.dayOne
+                ? `${formData.startTimeOne || '指定なし'}〜${formData.endTimeOne || '指定なし'}`
+                : undefined,
+              preferredDate2: formData.dayTwo || undefined,
+              preferredTimeSlot2: formData.dayTwo
+                ? `${formData.startTimeTwo || '指定なし'}〜${formData.endTimeTwo || '指定なし'}`
+                : undefined,
+              preferredDate3: formData.dayThree || undefined,
+              preferredTimeSlot3: formData.dayThree
+                ? `${formData.startTimeThree || '指定なし'}〜${formData.endTimeThree || '指定なし'}`
+                : undefined,
+              airConImages: airConAttachments,
+              cleaningImages: cleaningAttachments,
+              adsCode: adsCode || undefined,
+            }),
+          })
+        } catch {
+          console.error('Failed to sync with Cleaning CMS')
+        }
+      }
 
       // LINE Notify with images
       const lineFormData = new FormData()

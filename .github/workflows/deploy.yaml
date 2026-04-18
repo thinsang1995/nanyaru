@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Set up SSH
         shell: bash
@@ -24,11 +26,18 @@ jobs:
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Install yarn + pm2
-        run: npm install --global yarn pm2
+      - name: Check if dependencies changed
+        id: deps
+        run: |
+          if git diff HEAD~1 --name-only | grep -q 'yarn.lock\|package.json'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Deploy to server
         env:
+          DEPS_CHANGED: ${{ steps.deps.outputs.changed }}
           NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN }}
           NEXT_PUBLIC_LINE_CHANNEL_SECRET: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_SECRET }}
           NEXT_PUBLIC_LINE_CLEANING_GROUP_ID: ${{ secrets.NEXT_PUBLIC_LINE_CLEANING_GROUP_ID }}
@@ -36,10 +45,11 @@ jobs:
           NEXT_PUBLIC_GOOGLE_PRIVATE_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_PRIVATE_KEY }}
           NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID: ${{ secrets.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID }}
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          NEXT_PUBLIC_CLEANING_CMS_API_URL: ${{ secrets.NEXT_PUBLIC_CLEANING_CMS_API_URL }}
         run: |
-          ssh -i ~/.ssh/id_rsa root@167.179.72.25 << 'ENDSSH'
+          ssh -i ~/.ssh/id_rsa root@167.179.72.25 << ENDSSH
             cd /var/www/nanyaru/source
-            
+
             # Tạo file .env trên server
             cat << EOF > .env
           NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN }}
@@ -49,13 +59,21 @@ jobs:
           NEXT_PUBLIC_GOOGLE_PRIVATE_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_PRIVATE_KEY }}
           NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID=${{ secrets.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID }}
           IMGBB_API_KEY=${{ secrets.IMGBB_API_KEY }}
+          NEXT_PUBLIC_CLEANING_CMS_API_URL=${{ secrets.NEXT_PUBLIC_CLEANING_CMS_API_URL }}
           EOF
-            
+
             # Pull code mới
             git pull origin main
-            
+
+            # Install chỉ khi dependencies thay đổi
+            if [ "${DEPS_CHANGED}" = "true" ]; then
+              echo "Dependencies changed, running yarn install..."
+              yarn install --frozen-lockfile --prefer-offline
+            else
+              echo "Dependencies unchanged, skipping install."
+            fi
+
             # Build và restart
-            yarn install --frozen-lockfile
             yarn build
             pm2 reload ecosystem.config.js
           ENDSSH

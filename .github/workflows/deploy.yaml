@@ -8,6 +8,11 @@ concurrency:
   group: deploy-production
   cancel-in-progress: true
 
+env:
+  VPS_HOST: root@167.179.72.25
+  VPS_PATH: /var/www/nanyaru/source
+  SSH_OPTS: -i ~/.ssh/id_rsa -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=5
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -27,7 +32,7 @@ jobs:
       - name: Check if dependencies changed
         id: deps
         run: |
-          if git diff HEAD~1 --name-only | grep -q 'yarn.lock\|package.json'; then
+          if git diff HEAD~1 --name-only | grep -qE '(yarn\.lock|package\.json)$'; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -66,35 +71,36 @@ jobs:
           chmod 644 ~/.ssh/known_hosts
 
       - name: Kill lingering build processes on VPS
+        continue-on-error: true
         run: |
-          ssh -i ~/.ssh/id_rsa root@167.179.72.25 "pkill -9 -f 'next build' 2>/dev/null; pkill -9 -f 'tsc.*next' 2>/dev/null; true"
+          ssh $SSH_OPTS $VPS_HOST "pkill -9 -f 'next build' || true; pkill -9 -f 'tsc.*next' || true; exit 0"
 
       - name: Rsync build artifacts to VPS
         env:
           DEPS_CHANGED: ${{ steps.deps.outputs.changed }}
         run: |
           rsync -avz --delete --exclude='cache' \
-            -e "ssh -i ~/.ssh/id_rsa" \
-            .next/ root@167.179.72.25:/var/www/nanyaru/source/.next/
+            -e "ssh $SSH_OPTS" \
+            .next/ $VPS_HOST:$VPS_PATH/.next/
 
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/id_rsa" \
-            public/ root@167.179.72.25:/var/www/nanyaru/source/public/
+            -e "ssh $SSH_OPTS" \
+            public/ $VPS_HOST:$VPS_PATH/public/
 
           rsync -avz \
-            -e "ssh -i ~/.ssh/id_rsa" \
+            -e "ssh $SSH_OPTS" \
             package.json yarn.lock next.config.ts ecosystem.config.js .env \
-            root@167.179.72.25:/var/www/nanyaru/source/
+            $VPS_HOST:$VPS_PATH/
 
           if [ "$DEPS_CHANGED" = "true" ]; then
             echo "Syncing node_modules..."
             rsync -avz --delete \
-              -e "ssh -i ~/.ssh/id_rsa" \
-              node_modules/ root@167.179.72.25:/var/www/nanyaru/source/node_modules/
+              -e "ssh $SSH_OPTS" \
+              node_modules/ $VPS_HOST:$VPS_PATH/node_modules/
           else
             echo "Dependencies unchanged, skipping node_modules sync."
           fi
 
       - name: Restart app
         run: |
-          ssh -i ~/.ssh/id_rsa root@167.179.72.25 "cd /var/www/nanyaru/source && pm2 reload ecosystem.config.js"
+          ssh $SSH_OPTS $VPS_HOST "cd $VPS_PATH && pm2 reload ecosystem.config.js"

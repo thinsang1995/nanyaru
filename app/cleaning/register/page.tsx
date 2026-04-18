@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Suspense, useRef } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import dayjs from 'dayjs'
 import { FieldError, FormProvider, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -16,8 +16,15 @@ import TextareaField from '../../../components/FormField/TextareaField'
 import ImageUploadField from '../../../components/FormField/ImageUploadField'
 
 const CMS_API_URL = process.env.NEXT_PUBLIC_CLEANING_CMS_API_URL || ''
+const UNSPECIFIED = '指定なし'
 
 type CmsAttachment = { key: string; fileName: string; fileSize: number; mimeType: string }
+
+const formatTimeSlot = (start?: string, end?: string) =>
+  `${start || UNSPECIFIED}〜${end || UNSPECIFIED}`
+
+const formatAppointmentDay = (day?: string, fallback = '') =>
+  day ? dayjs(day).format('YYYY年MM月DD日') : fallback
 
 async function uploadToCmsS3(file: File): Promise<CmsAttachment | null> {
   if (!CMS_API_URL) return null
@@ -150,21 +157,9 @@ const Register: React.FC<RegisterProps> = () => {
   const [isSending, setIsSending] = useState<boolean>(false)
   const [errorMsg, setErrorMsg] = useState<string>('')
 
-  const formRef = useRef(false)
-
   useEffect(() => {
-    if (!formRef.current && nameParams && phoneParams) {
-      setValue('cleanName', nameParams, { shouldValidate: false, shouldDirty: false })
-      setValue('cleanPhoneNumber', phoneParams, { shouldValidate: false, shouldDirty: false })
-      formRef.current = true
-    }
-  }, [nameParams, phoneParams, setValue])
-
-  useEffect(() => {
-    if (nameParams && phoneParams) {
-      setValue('cleanName', nameParams)
-      setValue('cleanPhoneNumber', phoneParams)
-    }
+    if (nameParams) setValue('cleanName', nameParams)
+    if (phoneParams) setValue('cleanPhoneNumber', phoneParams)
   }, [nameParams, phoneParams, setValue])
 
   const getExperienceLabel = (experienceValue: string) => {
@@ -189,16 +184,19 @@ const Register: React.FC<RegisterProps> = () => {
     setErrorMsg('')
 
     try {
-      // Send to Cleaning CMS (fire-and-forget)
+      const airConFiles = formData.cleanAirConNumber || []
+      const cleaningFiles = formData.cleanImages || []
+
       if (CMS_API_URL) {
         try {
-          const airConAttachments = (
-            await Promise.all((formData.cleanAirConNumber || []).map(uploadToCmsS3))
-          ).filter((r): r is CmsAttachment => r !== null)
-
-          const cleaningAttachments = (
-            await Promise.all((formData.cleanImages || []).map(uploadToCmsS3))
-          ).filter((r): r is CmsAttachment => r !== null)
+          const [airConAttachments, cleaningAttachments] = await Promise.all([
+            Promise.all(airConFiles.map(uploadToCmsS3)).then((r) =>
+              r.filter((x): x is CmsAttachment => x !== null),
+            ),
+            Promise.all(cleaningFiles.map(uploadToCmsS3)).then((r) =>
+              r.filter((x): x is CmsAttachment => x !== null),
+            ),
+          ])
 
           await fetch(`${CMS_API_URL}/api/bookings/from-submission`, {
             method: 'POST',
@@ -217,15 +215,15 @@ const Register: React.FC<RegisterProps> = () => {
               submissionNotes: formData.cleanOtherWarning || undefined,
               preferredDate: formData.dayOne || undefined,
               preferredTimeSlot: formData.dayOne
-                ? `${formData.startTimeOne || '指定なし'}〜${formData.endTimeOne || '指定なし'}`
+                ? formatTimeSlot(formData.startTimeOne, formData.endTimeOne)
                 : undefined,
               preferredDate2: formData.dayTwo || undefined,
               preferredTimeSlot2: formData.dayTwo
-                ? `${formData.startTimeTwo || '指定なし'}〜${formData.endTimeTwo || '指定なし'}`
+                ? formatTimeSlot(formData.startTimeTwo, formData.endTimeTwo)
                 : undefined,
               preferredDate3: formData.dayThree || undefined,
               preferredTimeSlot3: formData.dayThree
-                ? `${formData.startTimeThree || '指定なし'}〜${formData.endTimeThree || '指定なし'}`
+                ? formatTimeSlot(formData.startTimeThree, formData.endTimeThree)
                 : undefined,
               airConImages: airConAttachments,
               cleaningImages: cleaningAttachments,
@@ -237,7 +235,6 @@ const Register: React.FC<RegisterProps> = () => {
         }
       }
 
-      // LINE Notify with images
       const lineFormData = new FormData()
       lineFormData.append('cleanName', formData.cleanName)
       lineFormData.append('cleanFurigana', formData.cleanFurigana)
@@ -247,42 +244,22 @@ const Register: React.FC<RegisterProps> = () => {
       lineFormData.append('cleanNumOfAirConOut', formData.cleanNumOfAirConOut)
       lineFormData.append('cleanOtherRequest', formData.cleanOtherRequest)
       lineFormData.append('cleanOtherMenu', getMultiSelectString(formData.cleanOtherMenu))
-      lineFormData.append(
-        'appointmentDayOne',
-        formData.dayOne ? dayjs(formData.dayOne).format('YYYY年MM月DD日') : '',
-      )
-      lineFormData.append('startTimeOne', formData.startTimeOne || '指定なし')
-      lineFormData.append('endTimeOne', formData.endTimeOne || '指定なし')
-      lineFormData.append(
-        'appointmentDayTwo',
-        formData.dayTwo ? dayjs(formData.dayTwo).format('YYYY年MM月DD日') : '指定なし',
-      )
-      lineFormData.append('startTimeTwo', formData.startTimeTwo || '指定なし')
-      lineFormData.append('endTimeTwo', formData.endTimeTwo || '指定なし')
-      lineFormData.append(
-        'appointmentDayThree',
-        formData.dayThree ? dayjs(formData.dayThree).format('YYYY年MM月DD日') : '指定なし',
-      )
-      lineFormData.append('startTimeThree', formData.startTimeThree || '指定なし')
-      lineFormData.append('endTimeThree', formData.endTimeThree || '指定なし')
+      lineFormData.append('appointmentDayOne', formatAppointmentDay(formData.dayOne))
+      lineFormData.append('startTimeOne', formData.startTimeOne || UNSPECIFIED)
+      lineFormData.append('endTimeOne', formData.endTimeOne || UNSPECIFIED)
+      lineFormData.append('appointmentDayTwo', formatAppointmentDay(formData.dayTwo, UNSPECIFIED))
+      lineFormData.append('startTimeTwo', formData.startTimeTwo || UNSPECIFIED)
+      lineFormData.append('endTimeTwo', formData.endTimeTwo || UNSPECIFIED)
+      lineFormData.append('appointmentDayThree', formatAppointmentDay(formData.dayThree, UNSPECIFIED))
+      lineFormData.append('startTimeThree', formData.startTimeThree || UNSPECIFIED)
+      lineFormData.append('endTimeThree', formData.endTimeThree || UNSPECIFIED)
       lineFormData.append('cleanAddress', formData.cleanAddress)
       lineFormData.append('cleanBike', formData.cleanBike)
       lineFormData.append('cleanOtherWarning', formData.cleanOtherWarning)
       lineFormData.append('adsCode', adsCode || '')
 
-      // Append air conditioner number images
-      if (formData.cleanAirConNumber && formData.cleanAirConNumber.length > 0) {
-        formData.cleanAirConNumber.forEach((file) => {
-          lineFormData.append('airConImages', file)
-        })
-      }
-
-      // Append cleaning spot images
-      if (formData.cleanImages && formData.cleanImages.length > 0) {
-        formData.cleanImages.forEach((file) => {
-          lineFormData.append('images', file)
-        })
-      }
+      airConFiles.forEach((file) => lineFormData.append('airConImages', file))
+      cleaningFiles.forEach((file) => lineFormData.append('images', file))
 
       const lineResponse = await fetch('/api/cleaning_line_notify', {
         method: 'POST',
@@ -302,8 +279,6 @@ const Register: React.FC<RegisterProps> = () => {
       setIsSending(false)
     }
   }
-
-  Object.keys(fieldMap) as RegisterFieldKeys[]
 
   return (
     <>

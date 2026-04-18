@@ -4,6 +4,10 @@ on:
   push:
     branches: ['main']
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,17 +18,11 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set up SSH
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
 
       - name: Check if dependencies changed
         id: deps
@@ -35,23 +33,12 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Deploy to server
-        env:
-          DEPS_CHANGED: ${{ steps.deps.outputs.changed }}
-          NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN }}
-          NEXT_PUBLIC_LINE_CHANNEL_SECRET: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_SECRET }}
-          NEXT_PUBLIC_LINE_CLEANING_GROUP_ID: ${{ secrets.NEXT_PUBLIC_LINE_CLEANING_GROUP_ID }}
-          NEXT_PUBLIC_GOOGLE_CLIENT_EMAIL: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_EMAIL }}
-          NEXT_PUBLIC_GOOGLE_PRIVATE_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_PRIVATE_KEY }}
-          NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID: ${{ secrets.NEXT_PUBLIC_CLEANING_GOOGLE_SHEET_ID }}
-          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
-          NEXT_PUBLIC_CLEANING_CMS_API_URL: ${{ secrets.NEXT_PUBLIC_CLEANING_CMS_API_URL }}
-        run: |
-          ssh -i ~/.ssh/id_rsa root@167.179.72.25 << ENDSSH
-            cd /var/www/nanyaru/source
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --prefer-offline
 
-            # Tạo file .env trên server
-            cat << EOF > .env
+      - name: Create .env
+        run: |
+          cat << EOF > .env
           NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ACCESS_TOKEN }}
           NEXT_PUBLIC_LINE_CHANNEL_SECRET=${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_SECRET }}
           NEXT_PUBLIC_LINE_CLEANING_GROUP_ID=${{ secrets.NEXT_PUBLIC_LINE_CLEANING_GROUP_ID }}
@@ -62,18 +49,52 @@ jobs:
           NEXT_PUBLIC_CLEANING_CMS_API_URL=${{ secrets.NEXT_PUBLIC_CLEANING_CMS_API_URL }}
           EOF
 
-            # Pull code mới
-            git pull origin main
+      - name: Build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+        run: yarn build
 
-            # Install chỉ khi dependencies thay đổi
-            if [ "${DEPS_CHANGED}" = "true" ]; then
-              echo "Dependencies changed, running yarn install..."
-              yarn install --frozen-lockfile --prefer-offline
-            else
-              echo "Dependencies unchanged, skipping install."
-            fi
+      - name: Set up SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
-            # Build và restart
-            yarn build
-            pm2 reload ecosystem.config.js
-          ENDSSH
+      - name: Kill lingering build processes on VPS
+        run: |
+          ssh -i ~/.ssh/id_rsa root@167.179.72.25 "pkill -9 -f 'next build' 2>/dev/null; pkill -9 -f 'tsc.*next' 2>/dev/null; true"
+
+      - name: Rsync build artifacts to VPS
+        env:
+          DEPS_CHANGED: ${{ steps.deps.outputs.changed }}
+        run: |
+          rsync -avz --delete --exclude='cache' \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            .next/ root@167.179.72.25:/var/www/nanyaru/source/.next/
+
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            public/ root@167.179.72.25:/var/www/nanyaru/source/public/
+
+          rsync -avz \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            package.json yarn.lock next.config.ts ecosystem.config.js .env \
+            root@167.179.72.25:/var/www/nanyaru/source/
+
+          if [ "$DEPS_CHANGED" = "true" ]; then
+            echo "Syncing node_modules..."
+            rsync -avz --delete \
+              -e "ssh -i ~/.ssh/id_rsa" \
+              node_modules/ root@167.179.72.25:/var/www/nanyaru/source/node_modules/
+          else
+            echo "Dependencies unchanged, skipping node_modules sync."
+          fi
+
+      - name: Restart app
+        run: |
+          ssh -i ~/.ssh/id_rsa root@167.179.72.25 "cd /var/www/nanyaru/source && pm2 reload ecosystem.config.js"

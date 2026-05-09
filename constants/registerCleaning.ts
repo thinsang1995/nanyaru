@@ -86,7 +86,6 @@ const timeItems = [
 export const bikeItems = [
   { label: '有り', value: '有り' },
   { label: '無し', value: '無し' },
-  { label: '確認中', value: '確認中' },
 ]
 
 export const chidrenEducateItems = [
@@ -191,7 +190,7 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
   cleanNumOfAirCon: {
     items: airConItems,
     type: 'select',
-    question: ['エアコンクリーニング(お掃除機能なし)'],
+    question: ['エアコンクリーニング'],
     rules: {
       required: {
         value: true,
@@ -203,12 +202,7 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     items: airConOutItems,
     type: 'select',
     question: ['エアコン室外機 ※床据え置きタイプのみご対応となります。'],
-    rules: {
-      required: {
-        value: true,
-        message: '一つを選択してください。',
-      },
-    },
+    rules: {},
   },
   cleanOtherRequest: {
     items: [],
@@ -227,19 +221,14 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
   cleanImages: {
     items: [],
     type: 'image',
-    question: ['清掃箇所の写真があればアップロードしてください。（複数画像可能）'],
+    question: ['エアコン設置場所の周辺の写真を送信してください。（複数画像可能）（※作業場所確認したいので、エアコン設置場所から離れて撮影した写真）'],
     rules: {},
   },
   cleanOtherMenu: {
     items: otherMenuItems,
     type: 'multiselect',
     question: ['【水回りメニュー】※オプションのみのご注文は出来ません。（複数選択可能）'],
-    rules: {
-      required: {
-        value: true,
-        message: '一つを選択してください。',
-      },
-    },
+    rules: {},
   },
   dayOne: {
     items: [],

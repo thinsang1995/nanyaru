@@ -215,11 +215,6 @@ const ImageUploadField: React.FC<IImageUploadFieldProps> = ({
             {currentValue.length > 0 && (
               <p className='text-sm text-green-600 mt-3 flex items-center gap-1'>
                 <span>✓</span> {currentValue.length}/{maxFiles}枚選択中
-                {currentValue.length > 0 && (
-                  <span className='text-xs text-gray-500 ml-2'>
-                    (合計: {(currentValue.reduce((sum, f) => sum + f.size, 0) / 1024).toFixed(0)}KB)
-                  </span>
-                )}
               </p>
             )}
 

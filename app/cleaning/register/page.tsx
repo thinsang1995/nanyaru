@@ -150,7 +150,7 @@ const Register: React.FC<RegisterProps> = () => {
 
   const {
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     setValue,
   } = methods
 
@@ -177,6 +177,16 @@ const Register: React.FC<RegisterProps> = () => {
         .join(',')
     }
     return String(value)
+  }
+
+  const onInvalid = (formErrors: typeof errors) => {
+    const firstErrorKey = orderFields.find((k) => formErrors[k])
+    if (!firstErrorKey) return
+    const targetKey = ['endTimeOne', 'endTimeTwo', 'endTimeThree'].includes(firstErrorKey)
+      ? (firstErrorKey.replace('end', 'start') as RegisterFieldKeys)
+      : firstErrorKey
+    const el = document.querySelector(`[data-field="${targetKey}"]`) as HTMLElement | null
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   const onSubmit = async (formData: CleaningFormInputs) => {
@@ -283,9 +293,9 @@ const Register: React.FC<RegisterProps> = () => {
   return (
     <>
       {/* Header */}
-      <div className='bg-linear-to-r from-green-400 to-green-500 py-6 px-4 shadow-md'>
+      <div className='bg-linear-to-r from-green-400 to-green-500 py-4 px-4 shadow-md'>
         <div className='max-w-screen-sm mx-auto'>
-          <h1 className='text-center text-2xl font-bold text-white'>クリーニング予約フォーム</h1>
+          <h2 className='text-center text-xl font-bold text-white'>クリーニング予約フォーム</h2>
           <p className='text-center text-green-100 text-sm mt-2'>
             ご予約ありがとうございます。以下のフォームにご記入ください。
           </p>
@@ -299,6 +309,9 @@ const Register: React.FC<RegisterProps> = () => {
               className='w-full bg-white rounded-lg shadow-sm p-2 mt-2 mb-4'
               onSubmit={(e: React.FormEvent) => e.preventDefault()}
             >
+              <p className='text-sm text-red-500 px-2 pt-2'>
+                <span className='font-bold'>*</span> は必須項目です
+              </p>
               {orderFields.map((key) => {
                 const value = fieldMap[key]
                 const inputType = fieldMap[key].inputType || 'text'
@@ -315,7 +328,7 @@ const Register: React.FC<RegisterProps> = () => {
                   const endTimeKey = key.replace('start', 'end') as RegisterFieldKeys
 
                   return (
-                    <React.Fragment key={key}>
+                    <div key={key} data-field={key}>
                       <FormField questionName={['時間帯']} isDriver>
                         <div className='flex flex-row gap-2 w-full items-center'>
                           <SelectField
@@ -325,6 +338,7 @@ const Register: React.FC<RegisterProps> = () => {
                             orderLength={0}
                             error={errors[key] as FieldError | undefined}
                             rules={rules}
+                            placeholder='選択'
                           />
                           <div className='h-fit'>〜</div>
                           <SelectField
@@ -334,10 +348,11 @@ const Register: React.FC<RegisterProps> = () => {
                             orderLength={0}
                             error={errors[endTimeKey] as FieldError | undefined}
                             rules={fieldMap[endTimeKey].rules}
+                            placeholder='選択'
                           />
                         </div>
                       </FormField>
-                    </React.Fragment>
+                    </div>
                   )
                 }
 
@@ -444,9 +459,11 @@ const Register: React.FC<RegisterProps> = () => {
                 }
 
                 return (
-                  <FormField key={key} questionName={value.question} isDriver required={!!rules?.required}>
-                    {child}
-                  </FormField>
+                  <div key={key} data-field={key}>
+                    <FormField questionName={value.question} isDriver required={!!rules?.required}>
+                      {child}
+                    </FormField>
+                  </div>
                 )
               })}
 
@@ -461,8 +478,8 @@ const Register: React.FC<RegisterProps> = () => {
               focus:outline-none focus:ring-4 focus:ring-green-300
               disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:shadow-none'
                 type='button'
-                disabled={!isValid || isSending}
-                onClick={handleSubmit(onSubmit)}
+                disabled={isSending}
+                onClick={handleSubmit(onSubmit, onInvalid)}
               >
                 {isSending ? (
                   <span className='flex items-center justify-center gap-2'>

@@ -73,7 +73,7 @@ jobs:
       - name: Kill lingering build processes on VPS
         continue-on-error: true
         run: |
-          ssh $SSH_OPTS $VPS_HOST "pkill -9 -f 'next build' || true; pkill -9 -f 'tsc.*next' || true; exit 0"
+          ssh $SSH_OPTS $VPS_HOST "pkill -9 -f '[n]ext build' || true; pkill -9 -f '[t]sc.*next' || true; exit 0"
 
       - name: Rsync build artifacts to VPS
         env:

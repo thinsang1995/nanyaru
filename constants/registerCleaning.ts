@@ -71,6 +71,8 @@ export const experienceItems = [
 
 const timeItems = [
   { label: '指定なし', value: '指定なし' },
+  { label: '9時', value: '9時' },
+  { label: '10時', value: '10時' },
   { label: '11時', value: '11時' },
   { label: '12時', value: '12時' },
   { label: '13時', value: '13時' },
@@ -81,6 +83,9 @@ const timeItems = [
   { label: '18時', value: '18時' },
   { label: '19時', value: '19時' },
   { label: '20時', value: '20時' },
+  { label: '21時', value: '21時' },
+  { label: '22時', value: '22時' },
+  { label: '23時', value: '23時' },
 ]
 
 export const bikeItems = [

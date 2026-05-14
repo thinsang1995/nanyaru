@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static LIFF form assets zipped & uploaded to ECAIAD (third-party).
+    "register-liff/**",
   ]),
 ]);
 

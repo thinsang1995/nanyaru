@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>クリーニング予約フォーム - お客様情報</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/validationEngine.jquery.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/jquery.validationEngine.min.js"></script>
+	<script src="js/jquery.validationEngine-ja.js"></script>
+	<style>
+		*, *::before, *::after {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		html {
+			-webkit-text-size-adjust: 100%;
+		}
+
+		body {
+			font-family: 'Noto Sans JP', sans-serif;
+			background: #f9fafb;
+			color: #1f2937;
+			min-height: 100vh;
+			line-height: 1.6;
+		}
+
+		.header {
+			background: linear-gradient(to right, #4ade80, #22c55e);
+			padding: 16px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		}
+
+		.header h2 {
+			color: #fff;
+			font-size: 20px;
+			font-weight: 700;
+			text-align: center;
+			margin: 0;
+		}
+
+		.header p {
+			color: #dcfce7;
+			font-size: 14px;
+			text-align: center;
+			margin: 8px 0 0;
+		}
+
+		.container {
+			max-width: 640px;
+			margin: 0 auto;
+			padding: 4px;
+		}
+
+		.form-card {
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+			padding: 12px 8px;
+			margin-top: 8px;
+		}
+
+		.required-note {
+			color: #ef4444;
+			font-size: 14px;
+			padding: 8px 8px 0;
+		}
+
+		.required-note strong {
+			font-weight: 700;
+		}
+
+		.form-group {
+			margin-top: 16px;
+			padding: 0 8px;
+		}
+
+		.form-label {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 14px;
+			font-weight: 500;
+			color: #111827;
+			margin-bottom: 8px;
+		}
+
+		.badge-required {
+			font-size: 14px;
+			font-weight: 600;
+			color: #ef4444;
+			padding: 2px;
+		}
+
+		.form-input {
+			width: 100%;
+			padding: 12px 16px;
+			font-family: inherit;
+			font-size: 16px;
+			color: #111827;
+			background: #fff;
+			border: 1px solid #d1d5db;
+			border-radius: 8px;
+			outline: none;
+			transition: border-color 0.2s, box-shadow 0.2s;
+			-webkit-appearance: none;
+			appearance: none;
+		}
+
+		.form-input::placeholder {
+			color: #9ca3af;
+		}
+
+		.form-input:focus {
+			border-color: #22c55e;
+			box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.25);
+		}
+
+		.form-helper {
+			margin-top: 6px;
+			font-size: 12px;
+			color: #6b7280;
+		}
+
+		.submit-btn {
+			width: 100%;
+			margin-top: 32px;
+			padding: 16px 24px;
+			font-family: inherit;
+			font-size: 18px;
+			font-weight: 700;
+			color: #fff;
+			background: linear-gradient(to right, #4ade80, #22c55e);
+			border: none;
+			border-radius: 8px;
+			box-shadow: 0 10px 15px rgba(34, 197, 94, 0.2);
+			cursor: pointer;
+			transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+		}
+
+		.submit-btn:hover {
+			background: linear-gradient(to right, #22c55e, #16a34a);
+			transform: scale(1.02);
+			box-shadow: 0 15px 20px rgba(34, 197, 94, 0.3);
+		}
+
+		.submit-btn:active {
+			transform: scale(0.98);
+		}
+
+		.submit-btn:disabled {
+			background: linear-gradient(to right, #d1d5db, #9ca3af);
+			cursor: not-allowed;
+			transform: none;
+			box-shadow: none;
+		}
+
+		#loader {
+			position: fixed;
+			inset: 0;
+			background: #fff;
+			z-index: 9999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		#loader.loaded {
+			animation: fadeOut 0.5s 0.2s forwards;
+		}
+
+		@keyframes fadeOut {
+			to {
+				opacity: 0;
+				visibility: hidden;
+			}
+		}
+
+		.spinner {
+			width: 40px;
+			height: 40px;
+			border: 3px solid #dcfce7;
+			border-top-color: #22c55e;
+			border-radius: 50%;
+			animation: spin 0.8s linear infinite;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.formError .formErrorContent {
+			font-family: 'Noto Sans JP', sans-serif;
+			font-size: 12px !important;
+			padding: 6px 12px !important;
+			background: #ef4444 !important;
+			border-radius: 6px !important;
+			box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+		}
+
+		.formError .formErrorArrow div {
+			background: #ef4444 !important;
+		}
+
+		.footer {
+			text-align: center;
+			padding: 16px;
+			color: #9ca3af;
+			font-size: 12px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="loader" class="loaded" style="display: none;">
+		<div class="spinner"></div>
+	</div>
+
+	<form id="form-check" novalidate method="GET" action="https://nanyaru.com/cleaning/register">
+
+		<!-- 削除禁止 --><input type="hidden" id="useridfield" name="luid"><!-- 削除禁止 -->
+		<!-- 削除禁止 --><input type="hidden" id="fid" name="fid" value="###fid###"><!-- 削除禁止 -->
+		<!-- 削除禁止 --><input type="hidden" id="liffid" name="liffid" value="###liffid###"><!-- 削除禁止 -->
+		<!-- 削除禁止 --><input type="hidden" id="add_tags" name="add_tags" value="タグコード"><!-- 削除禁止 -->
+		<!-- 削除禁止 --><input type="hidden" id="del_tags" name="del_tags"><!-- 削除禁止 -->
+
+		<div class="header">
+			<h2>クリーニング予約フォーム</h2>
+			<p>お客様情報をご入力ください</p>
+		</div>
+
+		<div class="container">
+			<div class="form-card">
+				<p class="required-note"><strong>*</strong> は必須項目です</p>
+
+				<div class="form-group">
+					<input type="hidden" name="col_1_title" value="お名前">
+					<label class="form-label" for="col_1_name">
+						お名前
+						<span class="badge-required">*</span>
+					</label>
+					<input type="text" id="col_1_name" name="col_1_name"
+						class="form-input validate[required]"
+						placeholder="お名前をフルネームで入力してください"
+						data-prompt-position="topLeft" autocomplete="name">
+				</div>
+
+				<div class="form-group">
+					<input type="hidden" name="col_2_title" value="フリガナ">
+					<label class="form-label" for="col_2_furigana">
+						フリガナ
+						<span class="badge-required">*</span>
+					</label>
+					<input type="text" id="col_2_furigana" name="col_2_furigana"
+						class="form-input validate[required]"
+						placeholder="例）ケンタ タロウ"
+						data-prompt-position="topLeft"
+						autocomplete="off" autocapitalize="off" spellcheck="false">
+				</div>
+
+				<div class="form-group">
+					<input type="hidden" name="col_3_title" value="電話番号">
+					<label class="form-label" for="col_3_tel">
+						電話番号
+						<span class="badge-required">*</span>
+					</label>
+					<input type="tel" id="col_3_tel" name="col_3_tel"
+						class="form-input validate[required,custom[number],minSize[10],maxSize[11]]"
+						placeholder="例）08011112222"
+						data-prompt-position="topLeft" autocomplete="tel" inputmode="numeric">
+				</div>
+
+				<button type="submit" class="submit-btn">次へ進む</button>
+			</div>
+		</div>
+	</form>
+
+	<!-- 削除禁止 -->
+	<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+	<script src="liff-starter.js"></script>
+	<script>
+		window.onload = function (e) {
+			liff.init({
+				liffId: "###liffid###"
+			}).then(() => {
+				liff.getProfile().then(function (profile) {
+					document.getElementById('useridfield').value = profile.userId;
+				}).catch(function (error) {});
+			}).catch((err) => {});
+		};
+
+		$(function () {
+			$("#form-check").validationEngine();
+
+			$('[type="submit"]').click(function (e) {
+				e.preventDefault();
+				if ($("#form-check").validationEngine('validate')) {
+					$(this).prop('disabled', true);
+					$(this).closest('form').submit();
+				}
+			});
+		});
+	</script>
+	<!-- 削除禁止 -->
+
+</body>
+
+</html>

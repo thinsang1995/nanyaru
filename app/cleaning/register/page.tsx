@@ -145,8 +145,9 @@ const Register: React.FC<RegisterProps> = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const adsCode = searchParams.get('ecaiad') || ''
-  const nameParams = searchParams.get('name')
-  const phoneParams = searchParams.get('phone')
+  const nameParams = searchParams.get('name') || searchParams.get('col_1_name')
+  const furiganaParams = searchParams.get('furigana') || searchParams.get('col_2_furigana')
+  const phoneParams = searchParams.get('phone') || searchParams.get('col_3_tel')
 
   const {
     handleSubmit,
@@ -159,8 +160,9 @@ const Register: React.FC<RegisterProps> = () => {
 
   useEffect(() => {
     if (nameParams) setValue('cleanName', nameParams)
+    if (furiganaParams) setValue('cleanFurigana', furiganaParams)
     if (phoneParams) setValue('cleanPhoneNumber', phoneParams)
-  }, [nameParams, phoneParams, setValue])
+  }, [nameParams, furiganaParams, phoneParams, setValue])
 
   const getExperienceLabel = (experienceValue: string) => {
     const foundItem = usingItems.find((item) => item.value === experienceValue)

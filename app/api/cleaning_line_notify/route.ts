@@ -85,7 +85,6 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
 
     const cleanName = (formData.get('cleanName') as string) || ''
-    const cleanFurigana = (formData.get('cleanFurigana') as string) || ''
     const cleanPhoneNumber = (formData.get('cleanPhoneNumber') as string) || ''
     const cleanExperience = (formData.get('cleanExperience') as string) || ''
     const cleanNumOfAirCon = (formData.get('cleanNumOfAirCon') as string) || ''
@@ -112,7 +111,6 @@ export async function POST(request: NextRequest) {
     const message = `
 新規クリーニング予約が入りました。
 ○お名前：${cleanName}
-○フリガナ：${cleanFurigana}
 ○電話番号：${cleanPhoneNumber}
 ○住所：${cleanAddress}
 ○ご利用経験：${cleanExperience}

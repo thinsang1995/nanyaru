@@ -2,7 +2,6 @@ import { RulesProps } from '../typing/utils'
 
 type RegisterFieldKeys =
   | 'cleanName'
-  | 'cleanFurigana'
   | 'cleanExperience'
   | 'cleanPhoneNumber'
   | 'cleanNumOfAirCon'
@@ -115,23 +114,6 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
     inputType: 'text',
     question: ['お名前'],
     placeholder: '例：田中 太郎',
-    rules: {
-      required: {
-        value: true,
-        message: '名前を入力してください。',
-      },
-      maxLength: {
-        value: 30,
-        message: 'フルネームが長すぎて登録ができません。',
-      },
-    },
-  },
-  cleanFurigana: {
-    items: [],
-    type: 'input',
-    inputType: 'text',
-    question: ['フリガナ'],
-    placeholder: '例：クリーニング タロウ',
     rules: {
       required: {
         value: true,

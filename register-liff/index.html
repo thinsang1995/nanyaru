@@ -225,12 +225,12 @@
 		<div class="spinner"></div>
 	</div>
 
-	<form id="form-check" novalidate method="GET" action="https://nanyaru.com/cleaning/register">
+	<form id="form-check" novalidate method="POST" action="###formurl###">
 
 		<!-- 削除禁止 --><input type="hidden" id="useridfield" name="luid"><!-- 削除禁止 -->
 		<!-- 削除禁止 --><input type="hidden" id="fid" name="fid" value="###fid###"><!-- 削除禁止 -->
 		<!-- 削除禁止 --><input type="hidden" id="liffid" name="liffid" value="###liffid###"><!-- 削除禁止 -->
-		<!-- 削除禁止 --><input type="hidden" id="add_tags" name="add_tags" value="タグコード"><!-- 削除禁止 -->
+		<!-- 削除禁止 --><input type="hidden" id="add_tags" name="add_tags" value="dMff2SH5rUE"><!-- 削除禁止 -->
 		<!-- 削除禁止 --><input type="hidden" id="del_tags" name="del_tags"><!-- 削除禁止 -->
 
 		<div class="header">
@@ -255,25 +255,12 @@
 				</div>
 
 				<div class="form-group">
-					<input type="hidden" name="col_2_title" value="フリガナ">
-					<label class="form-label" for="col_2_furigana">
-						フリガナ
-						<span class="badge-required">*</span>
-					</label>
-					<input type="text" id="col_2_furigana" name="col_2_furigana"
-						class="form-input validate[required]"
-						placeholder="例）ケンタ タロウ"
-						data-prompt-position="topLeft"
-						autocomplete="off" autocapitalize="off" spellcheck="false">
-				</div>
-
-				<div class="form-group">
-					<input type="hidden" name="col_3_title" value="電話番号">
-					<label class="form-label" for="col_3_tel">
+					<input type="hidden" name="col_2_title" value="電話番号">
+					<label class="form-label" for="col_2_tel">
 						電話番号
 						<span class="badge-required">*</span>
 					</label>
-					<input type="tel" id="col_3_tel" name="col_3_tel"
+					<input type="tel" id="col_2_tel" name="col_2_tel"
 						class="form-input validate[required,custom[number],minSize[10],maxSize[11]]"
 						placeholder="例）08011112222"
 						data-prompt-position="topLeft" autocomplete="tel" inputmode="numeric">
@@ -304,6 +291,15 @@
 			$('[type="submit"]').click(function (e) {
 				e.preventDefault();
 				if ($("#form-check").validationEngine('validate')) {
+					// Stash only the fields nanyaru.com needs to prefill. Furigana is
+					// captured by ECAI but not used downstream.
+					try {
+						sessionStorage.setItem('cleaningFormData', JSON.stringify({
+							col_1_name: $('#col_1_name').val() || '',
+							col_3_tel: $('#col_3_tel').val() || '',
+							luid: $('#useridfield').val() || ''
+						}));
+					} catch (err) {}
 					$(this).prop('disabled', true);
 					$(this).closest('form').submit();
 				}

@@ -56,7 +56,6 @@ async function uploadToCmsS3(file: File): Promise<CmsAttachment | null> {
 
 export type CleaningFormInputs = {
   cleanName: string
-  cleanFurigana: string
   cleanPhoneNumber: string
   cleanAddress: string
   cleanExperience: string
@@ -93,7 +92,6 @@ const Register: React.FC<RegisterProps> = () => {
     mode: 'onChange',
     defaultValues: {
       cleanName: '',
-      cleanFurigana: '',
       cleanPhoneNumber: '',
       cleanAddress: '',
       cleanExperience: '',
@@ -119,7 +117,6 @@ const Register: React.FC<RegisterProps> = () => {
 
   const orderFields: RegisterFieldKeys[] = [
     'cleanName',
-    'cleanFurigana',
     'cleanPhoneNumber',
     'cleanAddress',
     'cleanExperience',
@@ -146,8 +143,8 @@ const Register: React.FC<RegisterProps> = () => {
   const searchParams = useSearchParams()
   const adsCode = searchParams.get('ecaiad') || ''
   const nameParams = searchParams.get('name') || searchParams.get('col_1_name')
-  const furiganaParams = searchParams.get('furigana') || searchParams.get('col_2_furigana')
   const phoneParams = searchParams.get('phone') || searchParams.get('col_3_tel')
+  const fromEcai = !!(searchParams.get('luid') || searchParams.get('col_1_name'))
 
   const {
     handleSubmit,
@@ -160,9 +157,8 @@ const Register: React.FC<RegisterProps> = () => {
 
   useEffect(() => {
     if (nameParams) setValue('cleanName', nameParams)
-    if (furiganaParams) setValue('cleanFurigana', furiganaParams)
     if (phoneParams) setValue('cleanPhoneNumber', phoneParams)
-  }, [nameParams, furiganaParams, phoneParams, setValue])
+  }, [nameParams, phoneParams, setValue])
 
   const getExperienceLabel = (experienceValue: string) => {
     const foundItem = usingItems.find((item) => item.value === experienceValue)
@@ -217,7 +213,6 @@ const Register: React.FC<RegisterProps> = () => {
               customerName: formData.cleanName,
               customerPhone: formData.cleanPhoneNumber,
               customerAddress: formData.cleanAddress || undefined,
-              customerFurigana: formData.cleanFurigana,
               experience: getExperienceLabel(formData.cleanExperience),
               numOfAirCon: formData.cleanNumOfAirCon,
               numOfAirConOut: formData.cleanNumOfAirConOut || undefined,
@@ -249,7 +244,6 @@ const Register: React.FC<RegisterProps> = () => {
 
       const lineFormData = new FormData()
       lineFormData.append('cleanName', formData.cleanName)
-      lineFormData.append('cleanFurigana', formData.cleanFurigana)
       lineFormData.append('cleanPhoneNumber', formData.cleanPhoneNumber)
       lineFormData.append('cleanExperience', getExperienceLabel(formData.cleanExperience))
       lineFormData.append('cleanNumOfAirCon', formData.cleanNumOfAirCon)
@@ -322,6 +316,11 @@ const Register: React.FC<RegisterProps> = () => {
 
                 // Skip end time fields - they are rendered with start time
                 if (['endTimeOne', 'endTimeTwo', 'endTimeThree'].includes(key)) {
+                  return null
+                }
+
+                // Hide name & phone when user arrives from ECAI (already filled there)
+                if (fromEcai && (key === 'cleanName' || key === 'cleanPhoneNumber')) {
                   return null
                 }
 

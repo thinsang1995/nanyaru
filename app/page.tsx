@@ -595,7 +595,7 @@ export default function Home() {
                   不用品回収・処分
                 </h3>
                 <p className='text-sm text-steel font-jp leading-relaxed mb-4'>
-                  家具・家電1点から、お部屋まるごと整理まで。
+                  家具・家電1点から、お部屋まるごと整理まで。ごみ屋敷の片付けもご相談ください。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
                   <span className='text-sm text-mute font-jp'>¥3,000〜</span>
@@ -777,7 +777,7 @@ export default function Home() {
                       代表者
                     </dt>
                     <dd className='col-span-12 md:col-span-9 font-jp text-steel text-sm'>
-                      代表社員　横戸 拓己
+                      横戸 拓己
                     </dd>
                   </div>
                   <div className='grid grid-cols-12 gap-4 px-6 py-5 bg-paper/60'>

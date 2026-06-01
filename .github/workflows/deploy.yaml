@@ -35,11 +35,7 @@ jobs:
       - name: Check if dependencies changed
         id: deps
         run: |
-          if git diff HEAD~1 --name-only | grep -qE '(yarn\.lock|package\.json)$'; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
+          echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
         run: yarn install --immutable

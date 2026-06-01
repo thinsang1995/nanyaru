@@ -131,7 +131,7 @@ export default function Home() {
                 </p>
               </div>
               <p className='hidden md:block text-base md:text-lg text-steel leading-relaxed max-w-xl mb-10 font-jp'>
-                エアコンクリーニング、不用品回収、引越しサポート、家電取付、草刈り、小修繕…
+                エアコンクリーニング、不用品回収、引越しサポート、家電取付、草刈り…
                 <br className='hidden md:block' />
                 暮らしの「ちょっと困った」を、まるごと解決する地域密着の便利屋です。
               </p>
@@ -190,7 +190,7 @@ export default function Home() {
                     </span>
                   </div>
                   <span className='text-[10px] text-mute font-jp font-bold tracking-widest'>
-                    9種のサービス
+                    8種のサービス
                   </span>
                 </div>
 
@@ -224,10 +224,10 @@ export default function Home() {
                         />
                       </svg>
                       <div>
-                        <div className='text-[8px] lg:text-[9px] font-jp font-bold opacity-80 tracking-wider mb-0.5'>
+                        <div className='text-[10px] lg:text-[12px] font-jp font-bold opacity-80 tracking-wider mb-0.5'>
                           対応中
                         </div>
-                        <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                        <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                           エアコン
                           <br />
                           洗浄
@@ -249,7 +249,7 @@ export default function Home() {
                           d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m14 0H5'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         不用品
                         <br />
                         回収
@@ -270,7 +270,7 @@ export default function Home() {
                           d='M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         引越し
                         <br />
                         サポート
@@ -288,31 +288,10 @@ export default function Home() {
                         <path
                           strokeLinecap='round'
                           strokeLinejoin='round'
-                          d='M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877'
-                        />
-                      </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
-                        小修繕
-                        <br />
-                        組立
-                      </div>
-                    </div>
-
-                    <div className='aspect-square bg-white text-ink rounded-lg lg:rounded-xl p-2 lg:p-3 flex flex-col justify-between hover:bg-warn transition-colors cursor-pointer'>
-                      <svg
-                        className='w-5 h-5 lg:w-6 lg:h-6 text-safety'
-                        fill='none'
-                        stroke='currentColor'
-                        strokeWidth='2'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
                           d='M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         家電
                         <br />
                         取付
@@ -333,7 +312,7 @@ export default function Home() {
                           d='M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         草刈り
                         <br />
                         庭木
@@ -354,7 +333,7 @@ export default function Home() {
                           d='M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281M15 12a3 3 0 11-6 0 3 3 0 016 0z'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         ハウス
                         <br />
                         清掃
@@ -375,7 +354,7 @@ export default function Home() {
                           d='M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75z'
                         />
                       </svg>
-                      <div className='text-[10px] lg:text-[11px] font-jp font-bold leading-tight'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold leading-tight'>
                         ペット
                         <br />
                         関連
@@ -390,7 +369,7 @@ export default function Home() {
                       <div className='font-display font-black text-2xl lg:text-3xl leading-none'>
                         +
                       </div>
-                      <div className='text-[10px] font-jp font-bold mt-1 lg:mt-1.5'>
+                      <div className='text-[12px] lg:text-[14px] font-jp font-bold mt-1 lg:mt-1.5'>
                         その他
                       </div>
                     </a>
@@ -438,9 +417,6 @@ export default function Home() {
             </span>
             <span className='text-warn font-display font-bold text-sm flex items-center gap-3'>
               草刈り・庭木剪定 <span className='text-mute'>•</span>
-            </span>
-            <span className='text-white font-display font-bold text-sm flex items-center gap-3'>
-              小修繕・組立 <span className='text-mute'>•</span>
             </span>
             <span className='text-warn font-display font-bold text-sm flex items-center gap-3'>
               ハウスクリーニング <span className='text-mute'>•</span>
@@ -619,7 +595,7 @@ export default function Home() {
                   不用品回収・処分
                 </h3>
                 <p className='text-sm text-steel font-jp leading-relaxed mb-4'>
-                  家具・家電1点から、お部屋まるごと整理まで。古物商許可・産廃許可取得済み。
+                  家具・家電1点から、お部屋まるごと整理まで。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
                   <span className='text-sm text-mute font-jp'>¥3,000〜</span>
@@ -668,36 +644,6 @@ export default function Home() {
             <div className='card-hover bg-white border border-line rounded-2xl overflow-hidden'>
               <div className='aspect-16/10 relative overflow-hidden'>
                 <Image
-                  src='/home/repairs-and-assembly.jpg'
-                  alt='小修繕・組立'
-                  fill
-                  sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
-                  className='object-cover'
-                />
-                <div className='absolute top-4 left-4 bg-safety text-white text-[10px] font-display font-bold px-2 py-1 rounded'>
-                  04
-                </div>
-              </div>
-              <div className='p-6'>
-                <h3 className='jp-heading text-ink text-xl mb-2'>小修繕・組立</h3>
-                <p className='text-sm text-steel font-jp leading-relaxed mb-4'>
-                  家具組立、棚取付、ドアノブ修理、水回りの簡単な修理など。
-                </p>
-                <div className='flex items-center justify-between pt-4 border-t border-line'>
-                  <span className='text-sm text-mute font-jp'>¥4,000〜</span>
-                  <a
-                    href='#contact'
-                    className='text-safety font-display font-bold text-sm hover:gap-2 inline-flex items-center gap-1'
-                  >
-                    詳しく見る →
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className='card-hover bg-white border border-line rounded-2xl overflow-hidden'>
-              <div className='aspect-16/10 relative overflow-hidden'>
-                <Image
                   src='/home/cutting-and-tree-pruning.jpg'
                   alt='草刈り・庭木剪定'
                   fill
@@ -705,7 +651,7 @@ export default function Home() {
                   className='object-cover'
                 />
                 <div className='absolute top-4 left-4 bg-ink text-warn text-[10px] font-display font-bold px-2 py-1 rounded'>
-                  05
+                  04
                 </div>
               </div>
               <div className='p-6'>
@@ -879,7 +825,7 @@ export default function Home() {
                       <br />
                       ・不用品回収、引越しサポート
                       <br />
-                      ・小修繕、家具組立、家電取付
+                      ・家電取付
                       <br />
                       ・草刈り、庭木剪定
                       <br />
@@ -893,24 +839,6 @@ export default function Home() {
                     </dt>
                     <dd className='col-span-12 md:col-span-9 font-jp text-steel text-sm'>
                       東京都・神奈川県・埼玉県・千葉県（エリア外も応相談）
-                    </dd>
-                  </div>
-                  <div className='grid grid-cols-12 gap-4 px-6 py-5'>
-                    <dt className='col-span-12 md:col-span-3 font-jp font-bold text-ink text-sm flex items-center gap-2'>
-                      <span className='w-1.5 h-1.5 bg-safety rounded-full'></span>
-                      許認可・保険
-                    </dt>
-                    <dd className='col-span-12 md:col-span-9 font-jp text-steel text-sm'>
-                      古物商許可、産業廃棄物収集運搬業／損害賠償保険完備
-                    </dd>
-                  </div>
-                  <div className='grid grid-cols-12 gap-4 px-6 py-5 bg-paper/60'>
-                    <dt className='col-span-12 md:col-span-3 font-jp font-bold text-ink text-sm flex items-center gap-2'>
-                      <span className='w-1.5 h-1.5 bg-safety rounded-full'></span>
-                      支払方法
-                    </dt>
-                    <dd className='col-span-12 md:col-span-9 font-jp text-steel text-sm'>
-                      現金 / クレジットカード / PayPay / 請求書払い（法人）
                     </dd>
                   </div>
                 </dl>
@@ -1141,14 +1069,6 @@ export default function Home() {
                     href='#services'
                     className='hover:text-warn transition-colors'
                   >
-                    小修繕・組立
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href='#services'
-                    className='hover:text-warn transition-colors'
-                  >
                     草刈り・庭木
                   </a>
                 </li>
@@ -1280,14 +1200,11 @@ export default function Home() {
           <div className='pt-6 border-t border-ink flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-jp'>
             <p>© 2026 合同会社なんやる. All rights reserved.</p>
             <div className='flex gap-6'>
-              <a href='#' className='hover:text-warn transition-colors'>
+              <a
+                href='/privacy'
+                className='hover:text-warn transition-colors'
+              >
                 プライバシーポリシー
-              </a>
-              <a href='#' className='hover:text-warn transition-colors'>
-                特定商取引法
-              </a>
-              <a href='#' className='hover:text-warn transition-colors'>
-                サイトマップ
               </a>
             </div>
           </div>

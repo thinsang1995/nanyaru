@@ -1,7 +1,8 @@
 module.exports = {
   apps : [{
     name: 'production',
-    script: 'yarn start',
+    script: './node_modules/.bin/next',
+    args: 'start',
   }],
 
   deploy : {

@@ -1,26 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Rubik:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;500;700&display=swap');
 @import 'tailwindcss';
+
+@theme {
+  --color-ink: #0F172A;
+  --color-slate2: #1E293B;
+  --color-steel: #475569;
+  --color-mute: #94A3B8;
+  --color-paper: #F8FAFC;
+  --color-line: #E2E8F0;
+  --color-safety: #F97316;
+  --color-safety-dark: #EA580C;
+  --color-warn: #FBBF24;
+  --color-line-green: #06C755;
+  --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+  --font-body: 'Rubik', 'Noto Sans JP', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --font-serif: 'Noto Serif JP', serif;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --logo-url: url('/logo.jpg');
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  font-size: 120%;
+  scroll-behavior: smooth;
 }
 
 body {
   background: #ffffff;
   color: #171717;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
 }
 
-html {
-  font-size: 120%;
+.logo {
+  background-image: var(--logo-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  flex-shrink: 0;
 }
-body {
-  font-size: 18px; /* 15px * 1.2 */
+
+.jp-heading {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.serif {
+  font-family: 'Noto Serif JP', serif;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.chamel-gradient {
+  background: linear-gradient(90deg, #EF4444 0%, #F97316 25%, #FBBF24 45%, #22C55E 70%, #3B82F6 90%, #A855F7 100%);
+}
+
+.btn-line {
+  background: #06C755;
+  color: white;
+  transition: all 200ms;
+  box-shadow: 0 4px 0 #05a647, 0 8px 16px rgba(6, 199, 85, 0.2);
+}
+.btn-line:hover {
+  background: #05B14C;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 #05a647, 0 10px 20px rgba(6, 199, 85, 0.25);
+}
+.btn-line:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #05a647;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #0F172A;
+  border: 2px solid #0F172A;
+  transition: all 200ms;
+}
+.btn-outline:hover {
+  background: #0F172A;
+  color: white;
+}
+
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #F97316;
+  transition: all 250ms ease;
+  transform: translateX(-50%);
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.card-hover {
+  transition: all 300ms;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+.work-card {
+  transition: all 400ms;
+  overflow: hidden;
+}
+.work-card img,
+.work-card .work-img {
+  transition: transform 500ms;
+}
+.work-card:hover .work-img {
+  transform: scale(1.05);
+}
+
+.number-display {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+@keyframes nanyaru-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
 }

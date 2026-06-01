@@ -2,6 +2,7 @@
   "name": "nanyaru",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "yarn@4.5.3",
   "scripts": {
     "dev": "next dev",
     "build": "rm -rf .next && NODE_OPTIONS='--max_old_space_size=4096' next build",
@@ -23,8 +24,7 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.68.0",
     "react-select": "^5.10.2",
-    "use-postal-jp": "^2.0.2",
-    "yarn": "^1.22.22"
+    "use-postal-jp": "^2.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -29,6 +29,9 @@ jobs:
           node-version: '20'
           cache: 'yarn'
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Check if dependencies changed
         id: deps
         run: |
@@ -39,7 +42,7 @@ jobs:
           fi
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: yarn install --immutable
 
       - name: Create .env
         run: |

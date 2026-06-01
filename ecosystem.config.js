@@ -13,7 +13,7 @@ module.exports = {
       repo: 'git@github.com:thinsang1995/nanyaru.git',
       path: '/var/www/nanyaru',
       'pre-deploy-local': '',
-      'post-deploy': 'yarn install && yarn build && pm2 reload ecosystem.config.js',
+      'post-deploy': 'corepack enable && yarn install --immutable && yarn build && pm2 reload ecosystem.config.js',
       'pre-setup': '',
     }
   }

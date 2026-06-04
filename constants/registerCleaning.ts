@@ -61,13 +61,6 @@ export const otherMenuItems = [
   { label: 'バスルーム鏡の鱗落とし(オプション)', value: 'バスルーム鏡の鱗落とし(オプション)' },
 ]
 
-export const experienceItems = [
-  { label: '未経験', value: 'NoExp' },
-  { label: '1年未満', value: 'Exp1Year' },
-  { label: '1~3年未満', value: 'ExpLess3Years' },
-  { label: '3年以上', value: 'ExpMore3Years' },
-]
-
 const timeItems = [
   { label: '指定なし', value: '指定なし' },
   { label: '9時', value: '9時' },
@@ -88,12 +81,8 @@ const timeItems = [
 ]
 
 export const bikeItems = [
-  { label: '有り', value: '有り' },
-  { label: '無し', value: '無し' },
-]
-
-export const chidrenEducateItems = [
-  { label: '有り', value: '有り' },
+  { label: 'バイクなら可', value: 'バイクなら可' },
+  { label: '軽自動車も可', value: '軽自動車も可' },
   { label: '無し', value: '無し' },
 ]
 
@@ -279,7 +268,7 @@ const registerCleaning: Record<RegisterFieldKeys, IFieldValue> = {
   cleanBike: {
     items: bikeItems,
     type: 'radio',
-    question: ['当日は三輪バイクでお伺いさせていただきます。敷地内に駐輪スペースはございますか?'],
+    question: ['当日は三輪バイクもしくは軽自動車でお伺いさせて頂きます。敷地内もしくはご自宅前などに駐車スペースなどはございますでしょうか。'],
     rules: {
       required: {
         value: true,

@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react'
 import Head from 'next/head'
+import Image from 'next/image'
 
 const CleaningThankYou: React.FC = () => {
   return (
@@ -12,21 +13,14 @@ const CleaningThankYou: React.FC = () => {
       <div className='min-h-screen w-screen bg-gray-50 flex flex-col items-center justify-center p-2'>
         <div className='max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center'>
           <div className='mb-6'>
-            <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-              <svg
-                className='w-8 h-8 text-green-500'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M5 13l4 4L19 7'
-                />
-              </svg>
+            <div className='w-24 h-24 mx-auto mb-4 flex items-center justify-center'>
+              <Image
+                src='/images/cleaning/register_bot1.png'
+                alt='あらいぐま'
+                width={96}
+                height={96}
+                className='object-contain'
+              />
             </div>
             <h1 className='text-xl font-bold text-gray-800 mb-2'>ご予約ありがとうございます</h1>
             <p className='text-gray-600'>クリーニングのご予約を承りました。</p>
@@ -38,10 +32,12 @@ const CleaningThankYou: React.FC = () => {
           </div>
 
           <a
-            href='/cleaning/lp'
+            href='https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
+            target='_blank'
+            rel='noopener noreferrer'
             className='inline-block w-full py-3 px-6 bg-green-400 text-white font-medium rounded-md hover:bg-green-500 transition-colors'
           >
-            トップページへ戻る
+            公式ラインに戻る
           </a>
         </div>
       </div>

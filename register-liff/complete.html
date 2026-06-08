@@ -114,13 +114,13 @@
 		<p>予約フォームへ移動しています。<br>しばらくお待ちください...</p>
 		<!-- Anchor fallback: href is updated by JS with stashed params before auto-redirect.
 		     If JS fails or is disabled, user can tap to reach nanyaru without params. -->
-		<a id="manualLink" href="https://nanyaru.com/cleaning/register" class="close-btn">
+		<a id="manualLink" href="https://cleaning.nanyaru.com/register" class="close-btn">
 			予約フォームへ進む
 		</a>
 		<noscript>
 			<div class="noscript-notice">
 				JavaScriptが無効のため自動で移動できません。<br>
-				<a href="https://nanyaru.com/cleaning/register">予約フォームへ進む</a>
+				<a href="https://cleaning.nanyaru.com/register">予約フォームへ進む</a>
 			</div>
 		</noscript>
 	</div>
@@ -129,7 +129,7 @@
 	<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 	<script src="liff-starter.js"></script>
 	<script>
-		var NANYARU_URL = 'https://nanyaru.com/cleaning/register';
+		var NANYARU_URL = 'https://cleaning.nanyaru.com/register';
 
 		function buildRedirectUrl() {
 			var params = new URLSearchParams();

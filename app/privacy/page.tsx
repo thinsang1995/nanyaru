@@ -1,9 +1,10 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'プライバシーポリシー｜合同会社なんやる',
+  title: 'プライバシーポリシー',
   description:
     '合同会社なんやるの個人情報保護方針。お客様の個人情報の取扱いについてご説明します。',
+  alternates: { canonical: '/privacy' },
 }
 
 export default function PrivacyPage() {

@@ -5,10 +5,13 @@ import FloatingCTA from '@/components/FloatingCTA'
 import FAQ from '@/components/FAQ'
 
 export const metadata: Metadata = {
-  title: '最安値のエアコンクリーニングはなんやる｜夜間/休日OK・追加費なし',
+  title: {
+    absolute: '最安値のエアコンクリーニングはなんやる｜夜間/休日OK・追加費なし',
+  },
   description:
     'エアコンクリーニング(エアコン清掃・エアコン掃除)はなんやる。見積もり通りで当日の追加費用なし。低刺激洗剤・防カビ仕上げ、夜間/休日も対応、LINEで予約可。',
-openGraph: {
+  alternates: { canonical: '/cleaning/lp' },
+  openGraph: {
     title: '最安値のエアコンクリーニングはなんやる｜夜間/休日OK・追加費なし',
     description:
       'エアコンクリーニング(エアコン清掃・エアコン掃除)はなんやる。見積もり通りで当日の追加費用なし。低刺激洗剤・防カビ仕上げ、夜間/休日も対応、LINEで予約可。',

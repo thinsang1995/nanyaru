@@ -1,12 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-export const metadata = {
-  title: '合同会社なんやる｜暮らしの、なんでも屋。｜オフィシャルサイト',
-  description:
-    '合同会社なんやる オフィシャルサイト。エアコンクリーニング、不用品回収、引越しサポート、家電取付、便利屋業務まで。東京・神奈川・埼玉・千葉で対応。',
-}
-
 export default function Home() {
   return (
     <div className='font-body text-steel bg-white antialiased'>

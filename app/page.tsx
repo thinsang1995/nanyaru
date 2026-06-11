@@ -563,7 +563,7 @@ export default function Home() {
                   分解洗浄でカビ・花粉・ホコリを徹底除去。お子さま・ペットにも安心の洗剤を使用。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
-                  <span className='text-sm text-mute font-jp'>¥9,800〜</span>
+                  <span className='text-sm text-mute font-jp'>¥9,900〜</span>
                   <span className='text-safety font-display font-bold text-sm inline-flex items-center gap-1'>
                     詳しく見る →
                   </span>
@@ -592,7 +592,7 @@ export default function Home() {
                   家具・家電1点から、お部屋まるごと整理まで。ごみ屋敷の片付けもご相談ください。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
-                  <span className='text-sm text-mute font-jp'>¥3,000〜</span>
+                  <span className='text-sm text-mute font-jp'>¥-〜</span>
                   <a
                     href='#contact'
                     className='text-safety font-display font-bold text-sm hover:gap-2 inline-flex items-center gap-1'
@@ -624,7 +624,7 @@ export default function Home() {
                   単身・少量・近距離の引越しに。トラック手配から搬入・設置まで。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
-                  <span className='text-sm text-mute font-jp'>¥15,000〜</span>
+                  <span className='text-sm text-mute font-jp'>¥-〜</span>
                   <a
                     href='#contact'
                     className='text-safety font-display font-bold text-sm hover:gap-2 inline-flex items-center gap-1'
@@ -656,7 +656,7 @@ export default function Home() {
                   お庭、空き地、植木の手入れ。除草剤の散布もご相談ください。
                 </p>
                 <div className='flex items-center justify-between pt-4 border-t border-line'>
-                  <span className='text-sm text-mute font-jp'>¥8,000〜</span>
+                  <span className='text-sm text-mute font-jp'>¥-〜</span>
                   <a
                     href='#contact'
                     className='text-safety font-display font-bold text-sm hover:gap-2 inline-flex items-center gap-1'

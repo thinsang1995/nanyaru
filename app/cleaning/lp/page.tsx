@@ -939,6 +939,21 @@ export default function Home() {
               <ul className='pr_menu_list'>
                 <li>
                   <Image
+                    src={`/images/price9.webp?v=${v}`}
+                    className='pr_menu_img'
+                    alt=''
+                    width={300}
+                    height={200}
+                  />
+                  <h3>自動掃除付きエアコン</h3>
+                  <p>
+                    時間：90分
+                    <br />
+                    料金：<span className='fc_red'>最安</span>11,000円~
+                  </p>
+                </li>
+                <li>
+                  <Image
                     src={`/images/price1.webp?v=${v}`}
                     className='pr_menu_img'
                     alt=''
@@ -960,11 +975,11 @@ export default function Home() {
                     width={300}
                     height={200}
                   />
-                  <h3>バスルーム(換気扇込)</h3>
+                  <h3>バスルーム</h3>
                   <p>
-                    時間：120分
+                    時間：90分
                     <br />
-                    料金：18,000円~
+                    料金：15,400円~
                   </p>
                 </li>
                 <li>
@@ -975,11 +990,11 @@ export default function Home() {
                     width={300}
                     height={200}
                   />
-                  <h3>浴室エプロン内部</h3>
+                  <h3>浴室エプロン内部 <br /> 浴室暖房乾燥機</h3>
                   <p>
                     時間：45分
                     <br />
-                    料金：18,000円~
+                    料金：5,500円~
                   </p>
                 </li>
                 <li>
@@ -992,9 +1007,9 @@ export default function Home() {
                   />
                   <h3>キッチン</h3>
                   <p>
-                    時間：120分
+                    時間：90分
                     <br />
-                    料金：18,000円~
+                    料金：15,400円~
                   </p>
                 </li>
                 <li>
@@ -1007,9 +1022,9 @@ export default function Home() {
                   />
                   <h3>レンジフード(換気扇)</h3>
                   <p>
-                    時間：120分
+                    時間：90分
                     <br />
-                    料金：18,000円~
+                    料金：15,400円~
                   </p>
                 </li>
                 <li>
@@ -1022,9 +1037,9 @@ export default function Home() {
                   />
                   <h3>洗面台</h3>
                   <p>
-                    時間：90分
+                    時間：45分
                     <br />
-                    料金：9,000円~
+                    料金：7,700円~
                   </p>
                 </li>
                 <li>
@@ -1037,9 +1052,9 @@ export default function Home() {
                   />
                   <h3>トイレ</h3>
                   <p>
-                    時間：90分
+                    時間：45分
                     <br />
-                    料金：9,000円~
+                    料金：7,700円~
                   </p>
                 </li>
                 <li>
@@ -1052,9 +1067,9 @@ export default function Home() {
                   />
                   <h3>鏡の鱗落とし</h3>
                   <p>
-                    時間：30分
+                    時間：15分
                     <br />
-                    料金：4,000円~
+                    料金：1,100円~
                   </p>
                 </li>
               </ul>

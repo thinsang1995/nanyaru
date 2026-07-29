@@ -3,6 +3,7 @@ import Script from 'next/script'
 import Image from 'next/image'
 import FloatingCTA from '@/components/FloatingCTA'
 import FAQ from '@/components/FAQ'
+import LineCtaButton from '@/components/LineCtaButton'
 
 export const metadata: Metadata = {
   title: {
@@ -30,7 +31,6 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz' // Add your LINE URL here
   const v = '20260221' // cache bust version - update this date when images change
 
   return (
@@ -117,21 +117,7 @@ export default function Home() {
                 <span className='slash'>500円クーポン配布中!</span>
               </p> */}
               <div className='cta_btn'>
-                <a
-                  href={lineUrl}
-                  className='GTM_cv_click'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <Image
-                    src={`/images/ico_line.webp?v=${v}`}
-                    className='ico_line'
-                    alt='LINE'
-                    width={40}
-                    height={40}
-                  />
-                  今すぐLINEで相談する
-                </a>
+                <LineCtaButton v={v} />
               </div>
             </div>
           </section>
@@ -422,21 +408,7 @@ export default function Home() {
                   <span className='slash'>500円クーポン配布中！</span>
                 </p> */}
                 <div className='cta_btn'>
-                  <a
-                    href={lineUrl}
-                    className='GTM_cv_click'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image
-                      src={`/images/ico_line.webp?v=${v}`}
-                      className='ico_line'
-                      alt='LINE'
-                      width={40}
-                      height={40}
-                    />
-                    今すぐLINEで相談する
-                  </a>
+                  <LineCtaButton v={v} />
                 </div>
               </div>
             </div>
@@ -572,21 +544,7 @@ export default function Home() {
                   <span className='slash'>500円クーポン配布中！</span>
                 </p> */}
                 <div className='cta_btn'>
-                  <a
-                    href={lineUrl}
-                    className='GTM_cv_click'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image
-                      src={`/images/ico_line.webp?v=${v}`}
-                      className='ico_line'
-                      alt='LINE'
-                      width={40}
-                      height={40}
-                    />
-                    今すぐLINEで相談する
-                  </a>
+                  <LineCtaButton v={v} />
                 </div>
               </div>
             </div>
@@ -1115,21 +1073,7 @@ export default function Home() {
                   <span className='slash'>500円クーポン配布中！</span>
                 </p> */}
                 <div className='cta_btn'>
-                  <a
-                    href={lineUrl}
-                    className='GTM_cv_click'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image
-                      src={`/images/ico_line.webp?v=${v}`}
-                      className='ico_line'
-                      alt='LINE'
-                      width={40}
-                      height={40}
-                    />
-                    今すぐLINEで相談する
-                  </a>
+                  <LineCtaButton v={v} />
                 </div>
               </div>
             </div>
@@ -1250,21 +1194,7 @@ export default function Home() {
                   <span className='slash'>500円クーポン配布中！</span>
                 </p> */}
                 <div className='cta_btn'>
-                  <a
-                    href={lineUrl}
-                    className='GTM_cv_click'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image
-                      src={`/images/ico_line.webp?v=${v}`}
-                      className='ico_line'
-                      alt='LINE'
-                      width={40}
-                      height={40}
-                    />
-                    今すぐLINEで相談する
-                  </a>
+                  <LineCtaButton v={v} />
                 </div>
               </div>
             </div>

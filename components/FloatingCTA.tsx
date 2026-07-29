@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useLineUrl } from './LineCtaButton'
 
 export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState<'fixed' | 'absolute'>('fixed')
   const [bottom, setBottom] = useState('0px')
-  const lineUrl = 'https://skg.ecai.jp/optin/13?ecaiad=itZfluaz'
+  const lineUrl = useLineUrl()
 
   useEffect(() => {
     const handleScroll = () => {

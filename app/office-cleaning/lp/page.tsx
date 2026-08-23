@@ -39,6 +39,13 @@ export const metadata: Metadata = {
 export default function OfficeCleaningLp() {
   return (
     <>
+      {/* M PLUS Rounded 1c: dùng cho .faq__q/.faq__a, badge tròn, nhãn dọc (styles/office-cleaning.css).
+          React 19 tự hoist <link> lên <head>. */}
+      <link
+        rel='stylesheet'
+        href='https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700&display=swap'
+      />
+
       <Script id='gtm-office-cleaning' strategy='afterInteractive'>
         {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

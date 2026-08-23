@@ -1399,6 +1399,74 @@ export default function OfficeCleaningLp() {
         </OfficeCtaLink>
       </div>
 
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: '見積りは無料ですか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: '無料です。フォームから写真と台数をお送りいただければ、概算は最短当日にお返しします。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '見積り以外の費用は発生しますか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'お見積り確定後の追加費用は一切発生しません。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '営業時間中の作業は避けられますか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'はい。閉店後・休業日・早朝など、ご都合に合わせて施工します。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '作業時間はどのくらいですか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: '天井埋込タイプで1台あたり約60〜90分が目安です。複数台の場合は事前にスケジュールをお伝えします。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'どんなメーカーでも対応できますか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: '国内主要メーカーに対応していますが、一部対応できない機種もあります。型番をお送りいただければ事前にご案内します。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '定期的にお願いすることはできますか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: '定期清掃割引をご用意しています。頻度やご所在地によって最適なプランが変わるため、無料でご相談ください。',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: '当日や直近の依頼もできますか？',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'スケジュール次第ですが、まずはフォームからご相談ください。最短日程をご案内します',
+                },
+              },
+            ],
+          }),
+        }}
+      />
+
       <Script src='/office-cleaning/script.js' strategy='afterInteractive' />
     </>
   )

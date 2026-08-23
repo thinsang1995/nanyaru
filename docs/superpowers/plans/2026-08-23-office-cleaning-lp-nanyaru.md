@@ -446,7 +446,7 @@ cat > /private/tmp/claude-501/-Users-sang-Desktop-liberty-nanyaru/57b8055d-d7f6-
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const src = readFileSync(process.argv[2], 'utf8')
-const body = src.split('\n').slice(45, 527).join('\n')
+const body = src.split('\n').slice(46, 527).join('\n')
 
 const out = body
   // style="--x:4%; --sz:118px" -> style={{ '--x': '4%', '--sz': '118px' } as React.CSSProperties}
@@ -469,18 +469,26 @@ const out = body
   })
   .replace(/\bclass=/g, 'className=')
   .replace(/src="img\//g, 'src="/images/office-cleaning/')
-  .replace(/<br>/g, '<br />')
-  .replace(/(<img\b[^>]*[^/])>/g, '$1 />')
+  // Void tag: PHẢI bắt cả biến thể có attribute. File này có 24 chỗ `<br>` và
+  // 28 chỗ `<br class="sp">` — rule chỉ khớp `<br>` sẽ bỏ sót hơn nửa và JSX không parse được.
+  .replace(/<(br|img|hr|input|source|wbr)\b((?:[^>"']|"[^"]*"|'[^']*')*?)\s*\/?>/g, '<$1$2 />')
   .replace(/<!--([\s\S]*?)-->/g, '{/*$1*/}')
 
 writeFileSync(process.argv[3], out)
 EOF
 SP=/private/tmp/claude-501/-Users-sang-Desktop-liberty-nanyaru/57b8055d-d7f6-45fc-92de-8339c855e6c7/scratchpad
 node $SP/codemod.mjs "オフィスクリーニングLP/index.html" $SP/body.tsx
-grep -c 'as React.CSSProperties' $SP/body.tsx
+# grep -o + wc -l, KHÔNG dùng grep -c: nhiều thẻ <i style=...> nằm chung một dòng,
+# grep -c đếm dòng nên sẽ ra 23 và làm bạn tưởng codemod hỏng.
+echo "styles:        $(grep -o 'as React.CSSProperties' $SP/body.tsx | wc -l)   # kỳ vọng 77"
+echo "br chưa đóng:  $(grep -o '<br[^>]*>' $SP/body.tsx | grep -vc '/>')        # kỳ vọng 0"
+echo "img chưa đóng: $(grep -o '<img[^>]*>' $SP/body.tsx | grep -vc '/>')       # kỳ vọng 0"
 ```
 
-Expected: `77`
+Expected: đúng các con số ghi trong comment.
+
+Controller đã chạy thử codemod này trên file thật và cho toàn bộ output đi qua
+`tsc --noEmit --jsx react-jsx` — **0 lỗi**. Nếu bạn chạy ra khác, đừng tự sửa regex; báo lại.
 
 - [ ] **Step 2: Dán vào page.tsx và rà tay theo section**
 

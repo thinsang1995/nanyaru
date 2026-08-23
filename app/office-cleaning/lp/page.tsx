@@ -39,6 +39,15 @@ export const metadata: Metadata = {
 export default function OfficeCleaningLp() {
   return (
     <>
+      {/* Đặt class 'js' lên <html> lúc parse (không chờ hydrate), để CSS bàn giao
+          (html.js .opening { display: flex }) hiện overlay opening TRƯỚC khung hình đầu,
+          đúng hành vi bản gốc thay vì để opening đổ xuống sau khi trang đã vẽ xong. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.classList.add('js');`,
+        }}
+      />
+
       {/* M PLUS Rounded 1c: dùng cho .faq__q/.faq__a, badge tròn, nhãn dọc (styles/office-cleaning.css).
           React 19 tự hoist <link> lên <head>. */}
       <link

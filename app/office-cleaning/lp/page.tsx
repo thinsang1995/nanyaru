@@ -41,10 +41,38 @@ export default function OfficeCleaningLp() {
     <>
       {/* Đặt class 'js' lên <html> lúc parse (không chờ hydrate), để CSS bàn giao
           (html.js .opening { display: flex }) hiện overlay opening TRƯỚC khung hình đầu,
-          đúng hành vi bản gốc thay vì để opening đổ xuống sau khi trang đã vẽ xong. */}
+          đúng hành vi bản gốc thay vì để opening đổ xuống sau khi trang đã vẽ xong.
+
+          Kèm theo: bắt click vào CTA form ở capture phase trước khi hydrate xong, để
+          gắn ?ecaiad= (mã quảng cáo) từ query string của trang vào URL đích trước khi
+          điều hướng — nếu không, click trong cửa sổ FCP→hydrate sẽ tới form không mang
+          mã (OfficeCtaLink chỉ tự gắn param sau khi hydrate). Không viết lại href trong
+          DOM trước hydrate (đó là loại mismatch gây ra lỗi #418) — chỉ điều hướng thủ
+          công tại thời điểm click. Ngữ nghĩa khớp useOfficeFormUrl() trong
+          components/OfficeCtaLink.tsx: không có ecaiad trên URL trang → giữ nguyên href
+          trần. Sau khi hydrate, href đã tự mang ecaiad nên điều kiện href đã có
+          'ecaiad=' sẽ bỏ qua, không gắn chồng. */}
       <script
         dangerouslySetInnerHTML={{
-          __html: `document.documentElement.classList.add('js');`,
+          __html: `document.documentElement.classList.add('js');
+(function () {
+  var FORM_URL_PREFIX = 'https://cleaning.nanyaru.com/register-business';
+  document.addEventListener(
+    'click',
+    function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="' + FORM_URL_PREFIX + '"]');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('ecaiad=') !== -1) return;
+      var ecaiad = new URLSearchParams(window.location.search).get('ecaiad');
+      if (!ecaiad) return;
+      e.preventDefault();
+      var sep = href.indexOf('?') === -1 ? '?' : '&';
+      window.location.href = href + sep + 'ecaiad=' + encodeURIComponent(ecaiad);
+    },
+    true
+  );
+})();`,
         }}
       />
 

@@ -10,6 +10,19 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
+  keywords: [
+    '業務用エアコンクリーニング',
+    'オフィスエアコンクリーニング',
+    '店舗エアコンクリーニング',
+    '法人向けエアコン清掃',
+    '天井埋込エアコン クリーニング',
+    '事務所 エアコン 清掃',
+    '東京',
+    '神奈川',
+    '埼玉',
+    '千葉',
+    '合同会社なんやる',
+  ],
   alternates: { canonical: '/office-cleaning/lp' },
   openGraph: {
     title: TITLE,

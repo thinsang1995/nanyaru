@@ -1052,80 +1052,82 @@ export default function OfficeCleaningLp() {
             ついでに<span className='marker'>お得</span>
           </p>
           <table className='option__table'>
-            <tr>
-              <th>
-                <img
-                  loading='lazy'
-                  className='option__ico'
-                  src='/images/office-cleaning/opt_01.webp'
-                  alt=''
-                  width={128}
-                  height={128}
-                />
-                室外機洗浄
-              </th>
-              <td>
-                <span className='nw'>電気代対策の</span>
-                <span className='nw'>仕上げに。</span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <img
-                  loading='lazy'
-                  className='option__ico'
-                  src='/images/office-cleaning/opt_02.webp'
-                  alt=''
-                  width={128}
-                  height={128}
-                />
-                防カビ・
-                <br className='sp' />
-                抗菌コート
-              </th>
-              <td>
-                <span className='nw'>キレイを</span>
-                <span className='nw'>長持ちさせたい方に。</span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <img
-                  loading='lazy'
-                  className='option__ico'
-                  src='/images/office-cleaning/opt_03.webp'
-                  alt=''
-                  width={128}
-                  height={128}
-                />
-                フィルターのみ
-                <br className='sp' />
-                定期清掃
-              </th>
-              <td>
-                <span className='nw'>分解洗浄の間の</span>
-                <span className='nw'>メンテナンスに。</span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <img
-                  loading='lazy'
-                  className='option__ico'
-                  src='/images/office-cleaning/opt_04.webp'
-                  alt=''
-                  width={128}
-                  height={128}
-                />
-                定期清掃契約
-                <br className='sp' />
-                （割引あり）
-              </th>
-              <td>
-                <span className='nw'>ご希望の場合は</span>
-                <span className='nw'>LINEでご相談ください。</span>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <th>
+                  <img
+                    loading='lazy'
+                    className='option__ico'
+                    src='/images/office-cleaning/opt_01.webp'
+                    alt=''
+                    width={128}
+                    height={128}
+                  />
+                  室外機洗浄
+                </th>
+                <td>
+                  <span className='nw'>電気代対策の</span>
+                  <span className='nw'>仕上げに。</span>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <img
+                    loading='lazy'
+                    className='option__ico'
+                    src='/images/office-cleaning/opt_02.webp'
+                    alt=''
+                    width={128}
+                    height={128}
+                  />
+                  防カビ・
+                  <br className='sp' />
+                  抗菌コート
+                </th>
+                <td>
+                  <span className='nw'>キレイを</span>
+                  <span className='nw'>長持ちさせたい方に。</span>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <img
+                    loading='lazy'
+                    className='option__ico'
+                    src='/images/office-cleaning/opt_03.webp'
+                    alt=''
+                    width={128}
+                    height={128}
+                  />
+                  フィルターのみ
+                  <br className='sp' />
+                  定期清掃
+                </th>
+                <td>
+                  <span className='nw'>分解洗浄の間の</span>
+                  <span className='nw'>メンテナンスに。</span>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <img
+                    loading='lazy'
+                    className='option__ico'
+                    src='/images/office-cleaning/opt_04.webp'
+                    alt=''
+                    width={128}
+                    height={128}
+                  />
+                  定期清掃契約
+                  <br className='sp' />
+                  （割引あり）
+                </th>
+                <td>
+                  <span className='nw'>ご希望の場合は</span>
+                  <span className='nw'>LINEでご相談ください。</span>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </section>

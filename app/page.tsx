@@ -571,6 +571,42 @@ export default function Home() {
               </div>
             </Link>
 
+            <Link
+              href='/office-cleaning/lp'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='card-hover bg-white border border-line rounded-2xl overflow-hidden block'
+            >
+              <div className='aspect-16/10 relative overflow-hidden'>
+                <Image
+                  src='/images/office-cleaning/band_photo.webp'
+                  alt='業務用エアコンクリーニング'
+                  fill
+                  sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
+                  className='object-cover'
+                />
+                <div className='absolute top-4 left-4 bg-ink text-warn text-[10px] font-display font-bold px-2 py-1 rounded'>
+                  02
+                </div>
+              </div>
+              <div className='p-6'>
+                <h3 className='jp-heading text-ink text-xl mb-2'>
+                  業務用エアコンクリーニング
+                </h3>
+                <p className='text-sm text-steel font-jp leading-relaxed mb-4'>
+                  オフィス・店舗・施設の天井埋込エアコンに対応。夜間・休日施工で業務を止めません。
+                </p>
+                <div className='flex items-center justify-between pt-4 border-t border-line'>
+                  <span className='text-sm text-mute font-jp'>
+                    ¥29,800/台（台数割引あり）
+                  </span>
+                  <span className='text-safety font-display font-bold text-sm inline-flex items-center gap-1'>
+                    詳しく見る →
+                  </span>
+                </div>
+              </div>
+            </Link>
+
             <div className='card-hover bg-white border border-line rounded-2xl overflow-hidden'>
               <div className='aspect-16/10 relative overflow-hidden'>
                 <Image
@@ -581,7 +617,7 @@ export default function Home() {
                   className='object-cover'
                 />
                 <div className='absolute top-4 left-4 bg-ink text-warn text-[10px] font-display font-bold px-2 py-1 rounded'>
-                  02
+                  03
                 </div>
               </div>
               <div className='p-6'>
@@ -613,7 +649,7 @@ export default function Home() {
                   className='object-cover'
                 />
                 <div className='absolute top-4 left-4 bg-ink text-warn text-[10px] font-display font-bold px-2 py-1 rounded'>
-                  03
+                  04
                 </div>
               </div>
               <div className='p-6'>
@@ -645,7 +681,7 @@ export default function Home() {
                   className='object-cover'
                 />
                 <div className='absolute top-4 left-4 bg-ink text-warn text-[10px] font-display font-bold px-2 py-1 rounded'>
-                  04
+                  05
                 </div>
               </div>
               <div className='p-6'>
@@ -1033,6 +1069,14 @@ export default function Home() {
                   >
                     エアコンクリーニング
                   </a>
+                </li>
+                <li>
+                  <Link
+                    href='/office-cleaning/lp'
+                    className='hover:text-warn transition-colors'
+                  >
+                    業務用エアコンクリーニング
+                  </Link>
                 </li>
                 <li>
                   <a

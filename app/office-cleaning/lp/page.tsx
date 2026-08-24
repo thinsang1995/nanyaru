@@ -1,3 +1,15 @@
+/* eslint-disable @next/next/no-img-element --
+   LP này cố ý dùng <img> thay next/image (quyết định D6 trong
+   docs/superpowers/specs/2026-08-23-office-cleaning-lp.md): 25 ảnh đều đã là webp, tổng 2.9 MB,
+   ảnh lớn nhất 136 KB — phần resize của next/image không đổi được gì đáng kể. Vấn đề Core Web
+   Vitals thật ở đây là CLS, và nó đã được xử lý bằng width/height thật trên từng thẻ.
+   Muốn đổi sang next/image thì phải kiểm lại toàn bộ giao diện: CSS của LP (2975 dòng, do 制作会社
+   viết) bám vào transform, object-position và parallax do JS điều khiển trên chính các thẻ này. */
+/* eslint-disable @next/next/no-page-custom-font --
+   Rule này không nhận biết App Router: nó dò chuỗi 'pages' trong đường dẫn file để đoán Pages
+   Router, nên với route App Router thì luôn nổ, đặt ở page hay layout cũng vậy. Repo không có
+   pages/_document.js. Rủi ro thật mà rule nhắm tới (font chỉ tải cho một trang) không áp dụng:
+   đây là LP quảng cáo độc lập, không có điều hướng client-side đi/đến nó. */
 import type { Metadata } from 'next'
 import Script from 'next/script'
 
@@ -73,6 +85,9 @@ export default function OfficeCleaningLp() {
   document.addEventListener(
     'click',
     function (e) {
+      // Chỉ xử lý click trái. Middle-click bắn 'auxclick' nên vốn đã không vào đây;
+      // alt+click là thao tác tải về, để trình duyệt tự lo.
+      if (e.button !== 0 || e.altKey) return;
       var a = e.target.closest && e.target.closest('a[href^="' + FORM_URL_PREFIX + '"]');
       if (!a) return;
       var href = a.getAttribute('href') || '';
@@ -81,7 +96,17 @@ export default function OfficeCleaningLp() {
       if (!ecaiad) return;
       e.preventDefault();
       var sep = href.indexOf('?') === -1 ? '?' : '&';
-      window.location.href = href + sep + 'ecaiad=' + encodeURIComponent(ecaiad);
+      var url = href + sep + 'ecaiad=' + encodeURIComponent(ecaiad);
+      // ctrl/cmd/shift+click nghĩa là "mở tab/cửa sổ mới". Tự mở thay vì chỉ bỏ qua,
+      // để giữ được mã quảng cáo — bỏ qua thì trình duyệt sẽ mở href trần, mất ecaiad.
+      if (e.ctrlKey || e.metaKey || e.shiftKey) {
+        var w = window.open(url, '_blank');
+        if (w) {
+          w.opener = null;
+          return;
+        }
+      }
+      window.location.href = url;
     },
     true
   );
@@ -90,7 +115,11 @@ export default function OfficeCleaningLp() {
       />
 
       {/* M PLUS Rounded 1c: dùng cho .faq__q/.faq__a, badge tròn, nhãn dọc (styles/office-cleaning.css).
-          React 19 tự hoist <link> lên <head>. */}
+          Bản bàn giao nạp font này bằng <link> trong <head>; convert sang metadata làm rơi mất thẻ đó.
+          Thẻ này nằm nguyên tại đây trong <body>, KHÔNG được hoist lên <head> — React 19 chỉ hoist
+          stylesheet khi có prop `precedence`. Cố tình không thêm `precedence`: nó khiến React chặn
+          render tới khi stylesheet tải xong, tức là chặn paint theo phản hồi của fonts.googleapis.com.
+          Đứng đầu <body> đã đủ sớm, và `display=swap` tránh FOIT. */}
       <link
         rel='stylesheet'
         href='https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700&display=swap'

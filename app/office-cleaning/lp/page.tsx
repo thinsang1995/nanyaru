@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element --
    LP này cố ý dùng <img> thay next/image (quyết định D6 trong
-   docs/superpowers/specs/2026-08-23-office-cleaning-lp.md): 25 ảnh đều đã là webp, tổng 2.9 MB,
-   ảnh lớn nhất 136 KB — phần resize của next/image không đổi được gì đáng kể. Vấn đề Core Web
-   Vitals thật ở đây là CLS, và nó đã được xử lý bằng width/height thật trên từng thẻ.
+   docs/superpowers/specs/2026-08-23-office-cleaning-lp.md): 25 ảnh render thật gồm 22 webp và
+   3 png (CTA_BT2 42 KB, flow_03 110 KB, flow_07 102 KB), ảnh lớn nhất 136 KB — phần resize của
+   next/image không đổi được gì đáng kể. Vấn đề Core Web Vitals thật ở đây là CLS, và nó đã được
+   xử lý bằng width/height thật trên từng thẻ.
    Muốn đổi sang next/image thì phải kiểm lại toàn bộ giao diện: CSS của LP (2975 dòng, do 制作会社
    viết) bám vào transform, object-position và parallax do JS điều khiển trên chính các thẻ này. */
 /* eslint-disable @next/next/no-page-custom-font --

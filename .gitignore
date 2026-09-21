@@ -43,3 +43,6 @@ next-env.d.ts
 # agent harness
 .claude/worktrees/
 .wt.env
+
+# playwright login storage for shot.sh (local only)
+.claude/shot-auth.json

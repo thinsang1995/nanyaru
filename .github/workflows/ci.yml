@@ -1,0 +1,46 @@
+name: CI
+# paths-ignore: docs-only changes cannot affect the build (no required status check is configured yet).
+# No `push` trigger on feature branches: the same commit would run twice (push + pull_request).
+on:
+  pull_request:
+    paths-ignore: ['docs/**', '**/*.md']
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md']
+  workflow_call:
+permissions:
+  contents: read
+  issues: write
+# A newer commit on the same PR cancels the stale run. Pushes to main get a group of their own (run_id):
+# a shared group keeps only one pending run, so a third fast merge would silently drop the second one.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'pull_request' && 'pr' || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - uses: actions/cache@v4
+        with:
+          path: ~/.yarn/berry/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - run: bash scripts/verify.sh --full
+      - name: Fail-loud on protected branch
+        if: failure() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "CI verify red on ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}" \
+            --body "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. The protected branch is red: fix on main or revert."

@@ -14,7 +14,17 @@ env:
   SSH_OPTS: -i ~/.ssh/id_rsa -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=5
 
 jobs:
+  # Re-run the full verify on the exact commit being deployed; a red verify must stop the build and the rsync.
+  verify:
+    uses: ./.github/workflows/ci.yml
+    # A called workflow cannot exceed its caller's token: grant what ci.yml declares (issues: write for fail-loud),
+    # otherwise GitHub rejects the whole run when the repo default is read-only.
+    permissions:
+      contents: read
+      issues: write
+
   deploy:
+    needs: verify
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +39,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
 
       - name: Check if dependencies changed

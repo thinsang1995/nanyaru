@@ -1,9 +1,12 @@
 name: CI
 # No `push` trigger on feature branches: the same commit would run twice (push + pull_request).
-# No paths-ignore: main carries a ruleset that requires the `verify` check, so every PR must report it (the run takes ~40s).
+# pull_request only for PRs into main: the ruleset on main requires the `verify` check there. PRs into develop are
+# verified locally before the PR (harness pre-push gate) and again by the develop push run once merged.
+# No paths-ignore: the ruleset needs every PR into main to report the check (the run takes ~40s).
 # No `push` trigger on main: deploy.yaml calls this workflow on every push to main; a trigger here would run it twice.
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [develop]
   workflow_call:

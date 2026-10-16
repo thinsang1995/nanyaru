@@ -1,23 +1,16 @@
 name: CI
-# No `push` trigger on feature branches: the same commit would run twice (push + pull_request).
-# pull_request only for PRs into main: the ruleset on main requires the `verify` check there. PRs into develop are
-# verified locally before the PR (harness pre-push gate) and again by the develop push run once merged.
-# No paths-ignore: the ruleset needs every PR into main to report the check (the run takes ~40s).
+# No pull_request trigger: changes are verified locally before the PR (harness pre-push gate) and again here once they
+# land on develop; main is verified by deploy.yaml through workflow_call before anything is built.
 # No `push` trigger on main: deploy.yaml calls this workflow on every push to main; a trigger here would run it twice.
+# paths-ignore: docs-only changes cannot affect the build (the main ruleset no longer requires a PR check).
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: [develop]
+    paths-ignore: ['docs/**', '**/*.md']
   workflow_call:
 permissions:
   contents: read
   issues: write
-# A newer commit on the same PR cancels the stale run. Pushes to develop get a group of their own (run_id):
-# a shared group keeps only one pending run, so a third fast merge would silently drop the second one.
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'pull_request' && 'pr' || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   verify:
     runs-on: ubuntu-latest

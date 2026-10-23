@@ -18,7 +18,7 @@
     "dayjs": "^1.11.19",
     "jp-zipcode-lookup": "^0.3.5",
     "lodash": "^4.17.21",
-    "next": "16.0.7",
+    "next": "16.4.2",
     "react": "19.2.0",
     "react-datepicker": "^9.1.0",
     "react-dom": "19.2.0",

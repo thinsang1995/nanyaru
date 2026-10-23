@@ -46,3 +46,6 @@ next-env.d.ts
 
 # playwright login storage for shot.sh (local only)
 .claude/shot-auth.json
+
+# written by `next dev` when it runs under an AI agent (Next 16 agentRules)
+/AGENTS.md
